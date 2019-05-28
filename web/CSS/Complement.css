@@ -1,0 +1,41 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 23/03/2019, 01:57:36 PM
+    Author     : wizzard
+*/
+
+.icono{
+    width: 10%;
+}
+table.form_func{
+    border-collapse:separate;
+    border:solid lightskyblue 1px;
+    border-radius:10px;
+    -moz-border-radius:10px;
+}
+table.form_func tr td{
+    border-left:solid black 1px;
+    border-top:solid black 1px;
+    padding: 10px;
+}
+table.form_func tr th{
+    border-left:solid black 1px;
+    border-top:solid black 1px;
+    background-color: lightskyblue;
+}
+
+table.form_func tr td input{
+    width: 100% !important;
+}
+
+table.form_func tr td input[type="submit"]{
+    width: 100% !important;
+    border-radius:10px;
+    background-color: lightskyblue;
+    height: 100% !important;
+    width: 100% !important;
+}
