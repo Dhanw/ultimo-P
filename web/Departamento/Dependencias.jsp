@@ -20,7 +20,7 @@
     <body>
         <%@ include file="/Header.jsp" %>
         <div class="container">
-            <!--Contenedor Principal -->
+            <!--Contenedor Principal commit del joracha -->
             <div class="input-group">
                 <div class="col-xs-12">
                     <div class="container">
