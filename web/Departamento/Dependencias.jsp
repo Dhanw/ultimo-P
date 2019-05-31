@@ -222,6 +222,7 @@
                                 <br>
                             </form> <!-- Fin  -->
                             <!-- Sigo con las pruebas de branch-->
+                            <!-- ok ya esta funcionando bastante bien-->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
