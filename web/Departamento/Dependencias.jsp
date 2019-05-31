@@ -10,7 +10,7 @@
     <head>
        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
          <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>JSP Page</title>
+        <title>Dependencias</title>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -36,11 +36,17 @@
                         <div class="col-md-1"></div>
                         <div class="col-lg-3" name="filtro_tipo">
                             <form class="form-inline" method="POST">
-                                <h4>Agregar</h4>
-                                 <input type="button" class="btn btn-default" value="Agregar" onclick="AgregarDependencias()">
+                             
+                                  <!--<input type="button" class="btn btn-default" value="Agregar" onclick="AgregarDependencias()"> -->
+                                    <div class="col-md-1"></div>
+                                    <div class="col-lg-3" name="filtro_tipo">
+                                      <div class="form-inline" method="POST">
+                                         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Agregar</button>
+                                      </div>
+                                   </div>
                             </form>
                         </div>
-                        
+                        <!--
                         <div class="col-md-1"></div>
                         <div class="col-lg-3" name="filtro_tipo">
                             <form class="form-inline" method="POST">
@@ -48,7 +54,7 @@
                                   <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Agregar</button>
                             </form>
                         </div>
-                        
+                        -->
                     </div>
                 </div>
             </div>
@@ -91,20 +97,20 @@
                 <div id="id02" class="w3-modal">
                     <div class="w3-modal-content">
                         <div class="w3-container">
-                            <span onclick="document.getElementById('id02').style.display = 'none'" class="w3-button w3-display-topright">&times;</span>
+                            <span onclick="document.getElementById('id02').style.display = 'none'" class="button display-topright">&times;</span>
                             <form  class="form-inline" method="POST"> <!--inicio -->
                                 <h4>Ingresar Dependencia</h4>
                                 <br>
                                 <div class="form">
-                                    <input name="nombre2"  id="nombre2" type="text" class="form-control"  placeholder="nombre" >
+                                    <input name="nombre3"  id="nombre3" type="text" class="form-control"  placeholder="nombre" >
                                 </div>
                                 <br>
                                 <div class="form-group">
-                                    <input name="ubicacion2" id="ubicacion2" type="text" class="form-control" placeholder="ubicacion" >
+                                    <input name="ubicacion3" id="ubicacion3" type="text" class="form-control" placeholder="ubicacion" >
                                 </div>  
                                 <br>
                                 <div class="form-group">
-                                    <input name="Funcionario2" id="idf2" type="text" class="form-control"  placeholder="id" >
+                                    <input name="Funcionario3" id="idf3" type="text" class="form-control"  placeholder="id" >
                                 </div>
                                 <br>
 
@@ -130,7 +136,7 @@
             </table>   
                  <!--termina pop up -->
                  
-                 <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Agregar</button>
+                 <!--<input type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Agregar</input> -->
 
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
@@ -152,17 +158,14 @@
                                 <div class="form-group">
                                     <input name="ubicacion2" id="ubicacion2" type="text" class="form-control" placeholder="ubicacion" >
                                 </div>  
-                                <br>
-                                <div class="form-group">
-                                    <input name="Funcionario2" id="idf2" type="text" class="form-control"  placeholder="id" >
-                                </div>
-                                <br>
-                                <!--
+                                  <br>
+                                  <br>
+                                
                                   <div class="form-group">
-                                     <select  id="mySelect" class="form-control"  placeholder="id" name="mySelect">  
+                                     <select  id="mySelect1" class="form-control"  placeholder="id" name="mySelect">  
                                      </select>
                                   </div>
-                                -->
+                                   <br>
                                 <br>
                                 <div class="form-group">
                                     <input type="button" class="btn btn-default" value="Guardar" onclick="crearDependencia()">
@@ -170,15 +173,17 @@
                                 <br>
                             </form> <!-- Fin  -->
       </div>
-      <div class="modal-footer">
+        
+      <!--<div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
+      </div> -->
+        
     </div>
 
   </div>
 </div>
                  
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal1">Editar</button>
+  <button type="button" class="btn btn-info " data-toggle="modal" data-target="#myModal1">Editar</button>
 
 <!--probando como es que gitkraken funciona   -->
 <!-- No funciona la primera prueba, ahora haciendo con netbeans-->
@@ -188,40 +193,38 @@
 
     <!-- Modal content-->
     <div class="modal-content">
+          
       <div class="modal-header">
-        <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+          
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Actualizar Dependencia</h4>
       </div>
       <div class="modal-body">
-         <form  class="form-inline" method="POST"> <!--inicio -->
+        
+<form  class="form-inline" method="POST"> <!--inicio -->
                                
                                 <div class="form">
-                                    <input name="nombre1"  id="nombre1" type="text" class="form-control"  placeholder="nombre" >
+                                    <input name="nombre2"  id="nombre2" type="text" class="form-control"  placeholder="nombre" >
                                 </div>
                                 <br>
                                 <div class="form-group">
-                                    <input name="ubicacion1" id="ubicacion1" type="text" class="form-control" placeholder="ubicacion" >
+                                    <input name="ubicacion2" id="ubicacion2" type="text" class="form-control" placeholder="ubicacion" >
                                 </div>  
+                
                                 <br>
-                                <div class="form-group">
-                                    <input name="Funcionario1" id="idf1" type="text" class="form-control"  placeholder="id" >
-                                </div>
                                 <br>
-                                <!--
+                                
                                   <div class="form-group">
-                                     <select  id="mySelect1" class="form-control"  placeholder="id" name="mySelect">  
+                                     <select  id="mySelect" class="form-control"  placeholder="id" name="mySelect">  
                                      </select>
                                   </div>
-                                -->
+                                   <br>
                                 <br>
-                                <!--
                                 <div class="form-group">
-                                    <input type="button" class="btn btn-default" value="Guardar" onclick="crearDependencia()">
+                                    <input type="button" class="btn btn-default" value="Guardar" onclick="Editar()">
                                 </div>
                                 <br>
-                                -->
-                            </form>
-                                 
+                            </form> 
                             <!-- Fin  -->
                             <!-- Sigo con las pruebas de branch-->
                             <!-- ok ya esta funcionando bastante bien-->
@@ -267,31 +270,25 @@
                 });
             }
             
-            
             function myFunction1( FuncionarioList) {
-             var x = document.getElementById("mySelect1");  
-             for(var i=0;i<FuncionarioList.length;i++){
-             var z = document.createElement("option");
-             z.setAttribute("class", "opt");
-             z.setAttribute("value", FuncionarioList[i].ID+"");
-             var t = document.createTextNode(FuncionarioList[i].ID +"- "+FuncionarioList[i].nombre);
-             z.appendChild(t);
-             x.appendChild(z);
-             document.body.appendChild(x);
-             }
+              var select = document.getElementById("mySelect1"); 
+              for(var i = 0; i < FuncionarioList.length; i++) {
+               var el = document.createElement("option");
+               el.textContent = FuncionarioList[i].ID +"-"+FuncionarioList[i].nombre ;
+               el.value = FuncionarioList[i].ID;
+               select.appendChild(el);
+               }
             }
             
             function myFunction( FuncionarioList) {
-             var x = document.getElementById("mySelect");  
-             for(var i=0;i<FuncionarioList.length;i++){
-             var z = document.createElement("option");
-             z.setAttribute("class", "opt");
-             z.setAttribute("value", FuncionarioList[i].ID+"");
-             var t = document.createTextNode(FuncionarioList[i].ID +"- "+FuncionarioList[i].nombre);
-             z.appendChild(t);
-             x.appendChild(z);
-             document.body.appendChild(x);
-             }
+             var select = document.getElementById("mySelect"); 
+
+              for(var i = 0; i < FuncionarioList.length; i++) {
+               var el = document.createElement("option");
+               el.textContent = FuncionarioList[i].ID +"-"+FuncionarioList[i].nombre ;
+               el.value = FuncionarioList[i].ID;
+               select.appendChild(el);
+               }
             }
             
             function removeRows1() {
@@ -391,7 +388,7 @@
                                 
                             }
                 });
-                document.getElementById('id01').style.display = 'block';
+                document.getElementById('myModal1').style.display = 'block';
             }
             function mostrar(per) {
                 $("#idf1").val(per.ID);
