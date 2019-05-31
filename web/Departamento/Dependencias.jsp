@@ -76,10 +76,7 @@
                                     <input name="ubicacion1" id="ubicacion1" type="text" class="form-control" placeholder="ubicacion" >
                                 </div>  
                                 <br>
-                                  <div class="form-group">
-                                     <select  id="mySelect1">  
-                                     </select>
-                                </div>
+
                                 <div class="form-group">
                                     <input type="button" class="btn btn-default" value="actualizar" onclick="actualizar()">
                                 </div>
@@ -110,15 +107,12 @@
                                     <input name="Funcionario2" id="idf2" type="text" class="form-control"  placeholder="id" >
                                 </div>
                                 <br>
-                                  <div class="form-group">
-                                     <select  id="mySelect" class="form-control"  placeholder="id" name="mySelect">  
-                                     </select>
-                                </div>
+
                                 <br>
                                 <div class="form-group">
                                     <input type="button" class="btn btn-default" value="Guardar" onclick="crearDependencia()">
-                                    
                                 </div>
+                                
                                 <br>
                             </form> <!-- Fin  -->
                         </div>
@@ -216,11 +210,15 @@
                                      </select>
                                 </div>
                                 <br>
+                                <!--
                                 <div class="form-group">
                                     <input type="button" class="btn btn-default" value="Guardar" onclick="crearDependencia()">
                                 </div>
                                 <br>
-                            </form> <!-- Fin  -->
+                                -->
+                            </form>
+                                 
+                            <!-- Fin  -->
                             <!-- Sigo con las pruebas de branch-->
                             <!-- ok ya esta funcionando bastante bien-->
       </div>
@@ -243,7 +241,6 @@
                   verFuncionarios1();
                   
               }
-  
   
             function AgregarDependencias(){
             document.getElementById('id02').style.display = 'block';
