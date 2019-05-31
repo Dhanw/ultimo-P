@@ -157,10 +157,12 @@
                                     <input name="Funcionario2" id="idf2" type="text" class="form-control"  placeholder="id" >
                                 </div>
                                 <br>
+                                <!--
                                   <div class="form-group">
                                      <select  id="mySelect" class="form-control"  placeholder="id" name="mySelect">  
                                      </select>
-                                </div>
+                                  </div>
+                                -->
                                 <br>
                                 <div class="form-group">
                                     <input type="button" class="btn btn-default" value="Guardar" onclick="crearDependencia()">
@@ -187,7 +189,7 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
         <h4 class="modal-title">Actualizar Dependencia</h4>
       </div>
       <div class="modal-body">
@@ -205,10 +207,12 @@
                                     <input name="Funcionario1" id="idf1" type="text" class="form-control"  placeholder="id" >
                                 </div>
                                 <br>
+                                <!--
                                   <div class="form-group">
                                      <select  id="mySelect1" class="form-control"  placeholder="id" name="mySelect">  
                                      </select>
-                                </div>
+                                  </div>
+                                -->
                                 <br>
                                 <!--
                                 <div class="form-group">
@@ -222,9 +226,11 @@
                             <!-- Sigo con las pruebas de branch-->
                             <!-- ok ya esta funcionando bastante bien-->
       </div>
+        <!--
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
+        -->
     </div>
 
   </div>
