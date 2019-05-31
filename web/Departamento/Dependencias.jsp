@@ -185,6 +185,7 @@
   <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal1">Editar</button>
 
 <!--probando como es que gitkraken funciona   -->
+<!-- No funciona la primera prueba, ahora haciendo con netbeans-->
 <!-- Modal -->
 <div id="myModal1" class="modal fade" role="dialog">
   <div class="modal-dialog">
