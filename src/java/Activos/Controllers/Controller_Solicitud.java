@@ -6,16 +6,18 @@
 package Activos.Controllers;
 
 import Activos.Logic.Bien;
-import Activos.Logic.Dependencia;
 import Activos.Logic.Model;
 import Activos.Logic.Solicitud;
 import Activos.Logic.Usuario;
-import Activos.Models.Model_SolicitudEdicion;
+import Activos.Models.Model_Solicitud;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -28,60 +30,259 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author jorac
  */
-@WebServlet(name = "Controller_Solicitud", urlPatterns = {"/Solicitud/Solicitud_listar", "/Solicitud/Solicitud_crear", "/Solicitud/Solicitud_mostrar", "/Solicitud/Solicitud_eliminar", "/Solicitud/Solicitud_editar",
-    "/Solicitud/Filtro_Comprobante", "/Solicitud/Filtro_tipo", "/Solicitud/Filtro_estado", "/Solicitud/Solicitud_eliminar_bien", "/Solicitud/Solicitud_agregar_bien", "/Solicitud/Solicitud_guardar"})
+@WebServlet(name = "Controller_Solicitud", urlPatterns = {"/Solicitud/Solicitud_crear",
+    "/Solicitud/Solicitud_agregar_bien", "/Solicitud/Solicitud_eliminar_bien", "/Solicitud/Solicitud_guardar",
+    "/Solicitud/Solicitud_mostrar", "/Solicitud/Solicitud_editar", "/Solicitud/Solicitud_eliminar"})
 public class Controller_Solicitud extends HttpServlet {
-     Model_SolicitudEdicion modelEdicion = new Model_SolicitudEdicion();
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+
+    Model_Solicitud modelSolicitud = new Model_Solicitud();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, Exception {
-
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            switch (request.getServletPath()) {
-                case "/Solicitud/Solicitud_listar":
-                    this.listarSolicitudes(request, response, "todas");
-                    break;
-                case "/Solicitud/Solicitud_crear":
-                    this.crearSolicitud(request, response);
-                    break;
-                case "/Solicitud/Solicitud_mostrar":
-                    this.mostrarSolicitud(request, response);
-                    break;
-                case "/Solicitud/Solicitud_eliminar":
-                    this.eliminarSolicitud(request, response);
-                    break;
-                case "/Solicitud/Solicitud_editar":
-                    this.editarSolicitud(request, response);
-                    break;
-                case "/Solicitud/Filtro_Comprobante":
-                    this.listarSolicitudes(request, response, "comprobante");
-                    break;
-                case "/Solicitud/Filtro_tipo":
-                    this.listarSolicitudes(request, response, "tipo");
-
-                case "/Solicitud/Filtro_estado":
-                    this.listarSolicitudes(request, response, "estado");
-                case "/Solicitud/Solicitud_agregar_bien":
-                    this.agregarBien(request, response);
-                    break;
-                case "/Solicitud/Solicitud_eliminar_bien":
-                    this.eliminarBien(request, response);
-                    break;
-                case "/Solicitud/Solicitud_guardar":
-                    this.guardarSolicitud(request, response);
-                    break;
-            }
-
+        response.setContentType("text/html;charset=UTF-8");
+        switch (request.getServletPath()) {
+            case "/Solicitud/Solicitud_crear":
+                this.crearSolicitud(request, response);
+                break;
+            case "/Solicitud/Solicitud_agregar_bien":
+                this.agregarBien(request, response);
+                break;
+            case "/Solicitud/Solicitud_eliminar_bien":
+                this.eliminarBien(request, response);
+                break;
+            case "/Solicitud/Solicitud_guardar":
+                this.guardarSolicitud(request, response);
+                break;
+            case "/Solicitud/Solicitud_mostrar":
+                this.mostrarSolicitud(request, response);
+                break;
+            case "/Solicitud/Solicitud_editar":
+                this.editarSolicitud(request, response);
+                break;
+            case "/Solicitud/Solicitud_eliminar":
+                this.eliminarSolicitud(request, response);
+                break;
         }
+    }
+
+    private void crearSolicitud(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String estado = (String) request.getSession(true).getAttribute("estado");
+        if (estado.equals("enproceso")) {
+            request.getSession(true).setAttribute("solicitud", modelSolicitud.getModelAgregar());
+            request.getSession(true).setAttribute("bien", modelSolicitud.getBien());
+        }
+        if (estado.equals("terminado")) {
+            this.modelSolicitud.setModelAgregar(new Solicitud());
+            request.getSession(true).setAttribute("estado", "enproceso");
+            request.getSession(true).setAttribute("tipoSolicitud", "crear");
+            request.getSession(true).setAttribute("bien", modelSolicitud.getBien());
+            request.getSession(true).setAttribute("solicitud", modelSolicitud.getModelAgregar());
+        }
+        request.getRequestDispatcher("/Solicitud/Solicitud_Crear.jsp").forward(request, response);
+    }
+
+    protected void updateBien(Bien bien, HttpServletRequest request) {
+        try {
+            bien.setDescripcion(request.getParameter("descripcion"));
+            bien.setMarca(request.getParameter("marca"));
+            bien.setModelo(request.getParameter("modelo"));
+            bien.setPrecio(Double.parseDouble(request.getParameter("precio")));
+            bien.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
+            bien.setID(modelSolicitud.getContadorBienes());
+            this.modelSolicitud.setContadorBienes(bien.getID() + 1);
+        } catch (Exception ex) {
+        }
+    }
+
+    private Boolean is_NULL(HttpServletRequest request) {
+        return request.getParameter("descripcion") == null || request.getParameter("marca") == null
+                || request.getParameter("modelo") == null || request.getParameter("precio") == null
+                || request.getParameter("cantidad") == null;
+    }
+
+    private Map<String, String> validate_Fields(HttpServletRequest request) {
+        Map<String, String> errores = new HashMap<>();
+        String descripcion = request.getParameter("descripcion");
+        String marca = request.getParameter("marca");
+        String modelo = request.getParameter("modelo");
+        String precio = request.getParameter("precio");
+        String cantidad = request.getParameter("cantidad");
+        if (descripcion.isEmpty()) {
+            errores.put("descripcion", "EMPTY");
+        } else {
+            errores.put("descripcion", "RIGHT");
+        }
+        if (marca.isEmpty()) {
+            errores.put("marca", "EMPTY");
+        } else {
+            errores.put("marca", "RIGHT");
+        }
+        if (modelo.isEmpty()) {
+            errores.put("modelo", "EMPTY");
+        } else {
+            errores.put("modelo", "RIGHT");
+        }
+        if (precio.isEmpty()) {
+            errores.put("precio", "EMPTY");
+        } else {
+            if (Float.parseFloat(precio) < 0) {
+                errores.put("precio", "WRONG");
+            } else {
+                errores.put("precio", "RIGHT");
+            }
+        }
+        if (cantidad.isEmpty()) {
+            errores.put("cantidad", "EMPTY");
+        } else {
+            if (Integer.parseInt(cantidad) < 0) {
+                errores.put("cantidad", "WRONG");
+            } else {
+                errores.put("cantidad", "RIGHT");
+            }
+        }
+        return no_Errors(errores) ? new HashMap<>() : errores;
+    }
+
+    private Boolean no_Errors(Map<String, String> errores) {
+        for (String str : errores.values()) {
+            if (!str.equals("RIGHT")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void agregarBien(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (!this.is_NULL(request)) {
+            String tipo = (String) request.getSession(true).getAttribute("tipoSolicitud");
+            this.updateBien(modelSolicitud.getBien(), request);
+            Bien bien = modelSolicitud.getBien();
+            request.setAttribute("bien", bien);
+            Map<String, String> errors = this.validate_Fields(request);
+            if (errors.isEmpty()) {
+                if (tipo.equals("crear")) {
+                    this.modelSolicitud.agregarBien(bien, modelSolicitud.getModelAgregar());
+                    request.getSession(true).setAttribute("solicitud", modelSolicitud.getModelAgregar());
+                    this.modelSolicitud.setBien(new Bien());
+                    request.getSession(true).setAttribute("bien", modelSolicitud.getBien());
+                    request.getRequestDispatcher("/Solicitud/Solicitud_Crear.jsp").forward(request, response);
+                }
+                if (tipo.equals("editar")) {
+                    this.modelSolicitud.agregarBien(bien, modelSolicitud.getModelEditar());
+                    request.getSession(true).setAttribute("solicitud", modelSolicitud.getModelEditar());
+                    this.modelSolicitud.setBien(new Bien());
+                    request.getSession(true).setAttribute("bien", modelSolicitud.getBien());
+                    request.getRequestDispatcher("/Solicitud/Solicitud_Editar.jsp").forward(request, response);
+                }
+            } else {
+                request.setAttribute("errors", errors);
+                switch (tipo) {
+                    case "crear":
+                        request.getRequestDispatcher("/Solicitud/Solicitud_Crear.jsp").forward(request, response);
+                        break;
+                    case "editar":
+                        request.getRequestDispatcher("/Solicitud/Solicitud_Editar.jsp").forward(request, response);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        } else {
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+        }
+    }
+
+    private void eliminarBien(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String tipo = (String) request.getSession(true).getAttribute("tipoSolicitud");
+        int id_bien = Integer.parseInt(request.getParameter("ID"));
+        if (tipo.equals("crear")) {
+            this.modelSolicitud.eliminarBien(id_bien, modelSolicitud.getModelAgregar());
+            request.getSession(true).setAttribute("solicitud", modelSolicitud.getModelAgregar());
+        }
+        if (tipo.equals("editar")) {
+            this.modelSolicitud.eliminarBien(id_bien, modelSolicitud.getModelEditar());
+            request.getSession(true).setAttribute("solicitud", modelSolicitud.getModelEditar());
+        }
+        request.getRequestDispatcher("/Solicitud/Solicitud_Crear.jsp").forward(request, response);
+    }
+
+    protected void updateSolicitud(Solicitud sol, HttpServletRequest request) throws Exception {
+        sol.setComprobante(request.getParameter("comprobante"));
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+            java.util.Date parsed = format.parse(request.getParameter("fecha"));
+            Date date = new Date(parsed.getTime());
+            sol.setFecha(date);
+        } catch (Exception ex) {
+            LocalDate localdate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            Date date = Date.valueOf(localdate.format(formatter));
+            sol.setFecha(date);
+        }
+        String stringTipo = request.getParameter("tipo");
+        int tipo = Integer.parseInt(stringTipo);
+        sol.setTipo(tipo);
+        String stringEstado = request.getParameter("estado");
+        if (stringEstado != null) {
+            int estado = Integer.parseInt(stringEstado);
+            sol.setEstado(estado);
+        } else {
+            sol.setEstado(1);
+        }
+    }
+
+    private void guardarSolicitud(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Usuario user = (Usuario) request.getSession(true).getAttribute("user");
+        String tipo = (String) request.getSession(true).getAttribute("tipoSolicitud");
+        if (tipo.equals("crear")) {
+//            this.modelSolicitud.getModelAgregar().setRegistrador(user.getFuncionario());
+            this.updateSolicitud(modelSolicitud.getModelAgregar(), request);
+            this.modelSolicitud.guardarSolicitud(modelSolicitud.getModelAgregar(), user.getFuncionario());
+            request.getSession(true).setAttribute("estado", "terminado");
+            request.getRequestDispatcher("/Solicitud/Solicitud_listar").forward(request, response);
+        }
+        if (tipo.equals("editar")) {
+//            this.modelSolicitud.getModelEditar().setRegistrador(user.getFuncionario());
+            this.updateSolicitud(modelSolicitud.getModelEditar(), request);
+            this.modelSolicitud.actualizarSolicitud(modelSolicitud.getModelEditar());
+            request.getSession(true).setAttribute("estado", "terminado");
+            request.getRequestDispatcher("/Solicitud/Solicitud_listar").forward(request, response);
+        }
+    }
+
+    private void mostrarSolicitud(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            int id_solicitud = Integer.parseInt(request.getParameter("ID"));
+            Solicitud model = modelSolicitud.getSolicitud(id_solicitud);
+            this.modelSolicitud.setModelMostrar(model);
+            request.getSession(true).setAttribute("solicitud", modelSolicitud.getModelMostrar());
+            request.getRequestDispatcher("/Solicitud/Solicitud_Mostrar.jsp").forward(request, response);
+        } catch (Exception ex) {
+        }
+    }
+
+    private void editarSolicitud(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            int id_solicitud = Integer.parseInt(request.getParameter("ID"));
+            Solicitud model = modelSolicitud.getSolicitud(id_solicitud);
+            this.modelSolicitud.setModelEditar(model);
+            request.getSession(true).setAttribute("tipoSolicitud", "editar");
+            request.getSession(true).setAttribute("bien", modelSolicitud.getBien());
+            request.getSession(true).setAttribute("solicitud", modelSolicitud.getModelEditar());
+            request.getRequestDispatcher("/Solicitud/Solicitud_Editar.jsp").forward(request, response);
+        } catch (Exception ex) {
+        }
+    }
+
+    private void eliminarSolicitud(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        int id_solicitud = Integer.parseInt(request.getParameter("ID"));
+        try {
+            Model.instance().eliminarSolicitud(id_solicitud);
+            request.setAttribute("mensaje", "correcto");
+        } catch (SQLException error) {
+            request.setAttribute("mensaje", error.getMessage());
+        }
+        request.getRequestDispatcher("/Solicitud/Solicitud_listar").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -132,129 +333,4 @@ public class Controller_Solicitud extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
-    private void crearSolicitud(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String estado = (String) request.getSession(true).getAttribute("estado");
-        if (estado.equals("enproceso")) {
-            request.getSession(true).setAttribute("solicitud", modelEdicion.getSolicitud());
-        }
-        if (estado.equals("terminado")) {
-            this.modelEdicion.setSolicitud(new Solicitud());
-            request.getSession(true).setAttribute("estado", "enproceso");
-            request.getSession(true).setAttribute("solicitud", modelEdicion.getSolicitud());
-        }
-        request.getRequestDispatcher("/Solicitud/Solicitud_Edicion.jsp").forward(request, response);
-    }
-
-    private void mostrarSolicitud(HttpServletRequest request, HttpServletResponse response) {
-        Solicitud model = new Solicitud();
-        Solicitud modelConsultar = null;
-        try {
-            modelConsultar = Model.instance().getSolicitud(Integer.parseInt(request.getParameter("ID")));
-            request.setAttribute("model", modelConsultar);
-            request.getRequestDispatcher("/Solicitud/Solicitud_Mostrar.jsp").
-                    forward(request, response);
-        } catch (Exception ex) {
-        }
-
-    }
-
-    void updateModelId(Solicitud model, HttpServletRequest request) {
-        model.setID(Integer.parseInt(request.getParameter("nombre")));
-    }
-
-    private void editarSolicitud(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private void eliminarSolicitud(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        int id_solicitud = Integer.parseInt(request.getParameter("ID"));
-        try {
-            Model.instance().eliminarSolicitud(id_solicitud);
-            request.setAttribute("mensaje", "correcto");
-        } catch (SQLException error) {
-            request.setAttribute("mensaje", error.getMessage());
-        }
-        request.getRequestDispatcher("/Solicitud/Solicitud_listar").forward(request, response);
-    }
-
-    private void listarSolicitudes(HttpServletRequest request, HttpServletResponse response, String filtro) throws ServletException, IOException {
-
-        try {
-            Usuario use = (Usuario) request.getSession().getAttribute("user");
-            Dependencia dep = Model.instance().getDependencia_fromFuncionario(use.getFuncionario().getID());
-            request.setAttribute("depe", dep);
-            List<Solicitud> todas = Model.instance().solicitudesPorDependencia(dep);
-            List<Solicitud> solicitudes = new ArrayList<>();
-            switch (filtro) {
-                case "todas":
-                    solicitudes = todas;
-                    break;
-                case "comprobante":
-                    solicitudes = (List<Solicitud>) Model.instance().SolicitudesPorComprobante((String) request.getParameter("comprobante"));
-                    solicitudes.retainAll(todas);
-                    break;
-                case "tipo":
-                    String tipo = request.getParameter("tipo");
-                    solicitudes = (List<Solicitud>) Model.instance().SolitudesTipo(tipo);
-                    solicitudes.retainAll(todas);
-                    break;
-                case "estado":
-                    String estado = request.getParameter("estado");
-                    solicitudes = (List<Solicitud>) Model.instance().SolitudesEstado(estado);
-                    solicitudes.retainAll(todas);
-                    break;
-            }
-
-            request.setAttribute("soli", solicitudes);
-            request.getRequestDispatcher("/Solicitud/Solicitud_Listado.jsp").forward(request, response);
-        } catch (Exception ex) {
-            Logger.getLogger(Controller_Solicitud.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void agregarBien(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        this.updateBien(modelEdicion.getSolicitud(), modelEdicion.getBien(), request);
-        this.modelEdicion.setBien(new Bien());
-        request.getRequestDispatcher("/Solicitud/Solicitud_Edicion.jsp").forward(request, response);
-    }
-
-    private void eliminarBien(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        int id_bien = Integer.parseInt(request.getParameter("ID"));
-        this.modelEdicion.eliminarBien(id_bien);
-        request.getRequestDispatcher("/Solicitud/Solicitud_Edicion.jsp").forward(request, response);
-    }
-
-    private void guardarSolicitud(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Usuario user = (Usuario) request.getSession(true).getAttribute("user");
-        this.modelEdicion.getSolicitud().setRegistrador(user.getFuncionario());
-        this.updateSolicitud(modelEdicion.getSolicitud(), request);
-        this.modelEdicion.guardarSolicitud(modelEdicion.getSolicitud());
-        request.getSession(true).setAttribute("estado", "terminado");
-        request.getRequestDispatcher("/Solicitud/Solicitud_listar").forward(request, response);
-    }
-
-    protected void updateBien(Solicitud sol, Bien bien, HttpServletRequest request) throws Exception {
-        bien.setID(modelEdicion.getContadorBienes());
-        this.modelEdicion.setContadorBienes(bien.getID() + 1);
-        bien.setSolicitud(sol);
-        bien.setDescripcion(request.getParameter("descripcion"));
-        bien.setMarca(request.getParameter("marca"));
-        bien.setModelo(request.getParameter("modelo"));
-        bien.setPrecio(Double.parseDouble(request.getParameter("precio")));
-        bien.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
-        sol.getBienes().add(bien);
-    }
-
-    protected void updateSolicitud(Solicitud sol, HttpServletRequest request) throws Exception {
-        sol.setComprobante(request.getParameter("comprobante"));
-        // sol.setFecha((Date) new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fecha")));
-        int tipo = 0;
-        try {
-            tipo = Integer.parseInt(request.getParameter("tipo"));
-        } catch (Exception ex) {
-            sol.setTipo(tipo);
-        }
-    }
-
 }

@@ -1,35 +1,19 @@
+<%-- 
+    Document   : index
+    Created on : 19/05/2019, 03:56:38 PM
+    Author     : wizard
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-LOLSKODMOPAWPOMN comit despues de la broma
-AQUI JORACHA HACIENDO COMMIT DOBLE
--->
 <html>
     <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Sistema de Gestor Activos</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <base href="http://localhost:8080/Gestor_Activos/">
-        <link rel="stylesheet" href="CSS/Complement.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <%@ include file="/Head.jsp" %>
     </head>
     <body>
-        <nav class="navbar navbar-inverse">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand">Sistema Gestor de Activos</a>
-                </div>
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="index.html">Home</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="UserLogin/PrepareLogin"><span class="glyphicon glyphicon-log-in"></span>Login</a></li>
-                </ul>
-            </div>
-        </nav>
-
+        <%@ include file="/Header.jsp" %>
         <div class="container">
             <div class="row">
                 <br> <br>

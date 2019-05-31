@@ -12,7 +12,6 @@ import Activos.Logic.Puesto;
 import Activos.Logic.Usuario;
 import Activos.Models.Model_Funcionario;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;

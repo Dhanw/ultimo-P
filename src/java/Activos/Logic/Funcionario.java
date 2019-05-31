@@ -27,6 +27,9 @@ public class Funcionario {
     }
 
     public Funcionario() {
+        this.ID = 0;
+        this.identificacion = "";
+        this.nombre = "";
     }
 
     public int getID() {

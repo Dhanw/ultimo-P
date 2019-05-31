@@ -5,7 +5,11 @@
  */
 package Activos.Models;
 
+import Activos.Logic.Dependencia;
 import Activos.Logic.Model;
+import Activos.Logic.Solicitud;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -14,4 +18,63 @@ import Activos.Logic.Model;
 public class Model_SolicitudListado {
 
     private Model domainModel;
+    private Dependencia dependencia;
+    private List<Solicitud> solicitudes;
+
+    public Model_SolicitudListado() {
+        this.domainModel = Model.instance();
+        this.dependencia = new Dependencia();
+        this.solicitudes = new ArrayList();
+    }
+
+    public Model_SolicitudListado(Model domainModel, Dependencia dependencia, List<Solicitud> solicitudes) {
+        this.domainModel = domainModel;
+        this.dependencia = dependencia;
+        this.solicitudes = solicitudes;
+    }
+
+    public void setDomainModel(Model domainModel) {
+        this.domainModel = domainModel;
+    }
+
+    public void setDependencia(Dependencia dependencia) {
+        this.dependencia = dependencia;
+    }
+
+    public void setSolicitudes(List<Solicitud> solicitudes) {
+        this.solicitudes = solicitudes;
+    }
+
+    public Model getDomainModel() {
+        return domainModel;
+    }
+
+    public Dependencia getDependencia() {
+        return dependencia;
+    }
+
+    public List<Solicitud> getSolicitudes() {
+        return solicitudes;
+    }
+
+    public void updateDependencia(int id_funcionario) throws Exception {
+        Dependencia d = domainModel.getDependencia_fromFuncionario(id_funcionario);
+        this.setDependencia(d);
+    }
+
+    public List<Solicitud> solicitudesXDependencia() throws Exception {
+        return domainModel.solicitudesPorDependencia(dependencia);
+    }
+
+    public List<Solicitud> solicitudesXComprobante(String comprobante) throws Exception {
+        return domainModel.SolicitudesPorComprobante(comprobante);
+    }
+
+    public List<Solicitud> solicitudesXTipo(String tipo) throws Exception {
+        return domainModel.SolitudesTipo(tipo);
+    }
+
+    public List<Solicitud> solicitudesXEstado(String estado) throws Exception {
+        return domainModel.SolitudesEstado(estado);
+    }
 }

@@ -10,6 +10,7 @@ package Activos.Logic;
  * @author jorac
  */
 public class Puesto {
+
     int ID;
     String nombre;
     Funcionario funcionario;
@@ -29,7 +30,7 @@ public class Puesto {
     }
 
     public Puesto() {
-        
+
     }
 
     public int getID() {
@@ -63,9 +64,9 @@ public class Puesto {
     public void setDependencia(Dependencia dependencia) {
         this.dependencia = dependencia;
     }
-    
+
     @Override
-        public boolean equals(Object other) {
+    public boolean equals(Object other) {
         if (other == null) {
             return false;
         }

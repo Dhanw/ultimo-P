@@ -5,8 +5,6 @@
  */
 package Activos.Logic;
 
-import java.sql.SQLException;
-
 /**
  *
  * @author jorac
@@ -29,6 +27,11 @@ public class Usuario {
     Funcionario funcionario;
 
     public Usuario() {
+        this.ID = 0;
+        this.cuenta = "";
+        this.password = "";
+        this.rol = 1;
+        this.funcionario = new Funcionario();
     }
 
     public Usuario(int ID, String cuenta, String password, int rol, Funcionario funcionario) {
@@ -109,9 +112,9 @@ public class Usuario {
         }
         return "Indefinido";
     }
-    
+
     @Override
-        public boolean equals(Object other) {
+    public boolean equals(Object other) {
         if (other == null) {
             return false;
         }

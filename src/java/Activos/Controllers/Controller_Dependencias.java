@@ -8,8 +8,6 @@ package Activos.Controllers;
 import Activos.Logic.Dependencia;
 import Activos.Models.Model_Departamento;
 import com.google.gson.Gson;
-import Activos.Models.Model_Login;
-import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Int;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,11 +25,11 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Jose
  */
-@WebServlet(name = "Controller_Dependencias", urlPatterns = {"/CargarFuncionarios","/EliminarDependencia","/AgregarDependencia","/CargarDependencias","/BuscarDependencia","/EditarDependencia","/BuscarDependencia","/ActualizarDependencia"})
+@WebServlet(name = "Controller_Dependencias", urlPatterns = {"/CargarFuncionarios", "/EliminarDependencia", "/AgregarDependencia", "/CargarDependencias", "/BuscarDependencia", "/EditarDependencia", "/BuscarDependencia", "/ActualizarDependencia"})
 public class Controller_Dependencias extends HttpServlet {
-    
 
-     private Model_Departamento model = new Model_Departamento();
+    private Model_Departamento model = new Model_Departamento();
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -44,8 +42,8 @@ public class Controller_Dependencias extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, Exception {
         response.setContentType("text/html;charset=UTF-8");
-        
-        switch(request.getServletPath()){
+
+        switch (request.getServletPath()) {
             case "/AgregarDependencia":
                 this.doAgregarPersona(request, response);
                 break;
@@ -69,12 +67,11 @@ public class Controller_Dependencias extends HttpServlet {
                 break;
         }
     }
-    
-    
+
     public void doCargarFuncionarios(HttpServletRequest request, HttpServletResponse response) throws IOException, Exception {
         PrintWriter out = response.getWriter();
         Gson gson = new Gson();
-        
+
         if (this.model.listaFunc().size() > 0) {
             out.write(gson.toJson(this.model.listaFunc()));
             response.setStatus(200); // ok with content
@@ -82,9 +79,9 @@ public class Controller_Dependencias extends HttpServlet {
             response.setStatus(401); //Bad request
         }
     }
-    
-     public void doEliminarDependencia(HttpServletRequest request, HttpServletResponse response) throws IOException {
-       try {
+
+    public void doEliminarDependencia(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
             Gson gson = new Gson();
             BufferedReader aux = request.getReader();
             String s = gson.fromJson(aux, String.class);
@@ -95,9 +92,9 @@ public class Controller_Dependencias extends HttpServlet {
             System.out.println("Error en doAgregarDependencia");
         }
     }
-    
-       public void doActualizarDependencia(HttpServletRequest request, HttpServletResponse response) throws IOException {
-       try {
+
+    public void doActualizarDependencia(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
             Gson gson = new Gson();
             BufferedReader aux = request.getReader();
             Dependencia depe = gson.fromJson(aux, Dependencia.class);
@@ -108,23 +105,22 @@ public class Controller_Dependencias extends HttpServlet {
         }
     }
 
-    
-       public void doEditarDependencia(HttpServletRequest request, HttpServletResponse response) throws IOException {
-       try{
+    public void doEditarDependencia(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
             BufferedReader aux = request.getReader();
             Gson gson = new Gson();
             String s = gson.fromJson(aux, String.class);
             int id = Integer.parseInt(s);
             PrintWriter out = response.getWriter();
-            Dependencia lista=this.model.get(id);
-            
-            out.write(gson.toJson(lista));        
+            Dependencia lista = this.model.get(id);
+
+            out.write(gson.toJson(lista));
             response.setStatus(200); // ok with content
-        }catch(Exception e){
+        } catch (Exception e) {
             response.setStatus(401); //Bad request
         }
     }
-    
+
     public void doAgregarPersona(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             Gson gson = new Gson();
@@ -136,11 +132,11 @@ public class Controller_Dependencias extends HttpServlet {
             System.out.println("Error en doAgregarDependencia");
         }
     }
-    
-    public void doCargarPersonas(HttpServletRequest request, HttpServletResponse response) throws IOException, Exception{
+
+    public void doCargarPersonas(HttpServletRequest request, HttpServletResponse response) throws IOException, Exception {
         PrintWriter out = response.getWriter();
         Gson gson = new Gson();
-        
+
         if (this.model.list().size() > 0) {
             out.write(gson.toJson(this.model.list()));
             response.setStatus(200); // ok with content
@@ -148,22 +144,22 @@ public class Controller_Dependencias extends HttpServlet {
             response.setStatus(401); //Bad request
         }
     }
-    
-    public void doBuscarPorEdad(HttpServletRequest request, HttpServletResponse response){
-        try{
+
+    public void doBuscarPorEdad(HttpServletRequest request, HttpServletResponse response) {
+        try {
             BufferedReader aux = request.getReader();
             Gson gson = new Gson();
             String s = gson.fromJson(aux, String.class);
-            
+
             int edad = Integer.parseInt(s);
-            
+
             PrintWriter out = response.getWriter();
-            Dependencia dep=this.model.get(edad);
+            Dependencia dep = this.model.get(edad);
             List<Dependencia> lista = new ArrayList<>();
             lista.add(dep);
-            out.write(gson.toJson(lista));        
+            out.write(gson.toJson(lista));
             response.setStatus(200); // ok with content
-        }catch(Exception e){
+        } catch (Exception e) {
             response.setStatus(401); //Bad request
         }
     }
@@ -180,11 +176,11 @@ public class Controller_Dependencias extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         try {
-             processRequest(request, response);
-         } catch (Exception ex) {
-             Logger.getLogger(Controller_Dependencias.class.getName()).log(Level.SEVERE, null, ex);
-         }
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(Controller_Dependencias.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -198,11 +194,11 @@ public class Controller_Dependencias extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         try {
-             processRequest(request, response);
-         } catch (Exception ex) {
-             Logger.getLogger(Controller_Dependencias.class.getName()).log(Level.SEVERE, null, ex);
-         }
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(Controller_Dependencias.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

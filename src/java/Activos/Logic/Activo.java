@@ -83,9 +83,8 @@ public class Activo {
         if (!(other instanceof Activo)) {
             return false;
         }
-        Activo otro = (Activo)other;
+        Activo otro = (Activo) other;
         return otro.getID() == ID;
     }
-    
-    
+
 }

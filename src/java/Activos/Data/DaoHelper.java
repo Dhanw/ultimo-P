@@ -16,7 +16,7 @@ import java.sql.SQLException;
  */
 public class DaoHelper {
 
-    protected  Funcionario getFuncionarioH(ResultSet rs) throws SQLException {
+    protected Funcionario getFuncionarioH(ResultSet rs) throws SQLException {
         Funcionario func = null;
         if (rs.next()) {
             func = new Funcionario();
@@ -27,7 +27,7 @@ public class DaoHelper {
         return func;
     }
 
-    protected  Usuario getUsuarioH(ResultSet rs) throws SQLException {
+    protected Usuario getUsuarioH(ResultSet rs) throws SQLException {
         Usuario user = null;
         if (rs.next()) {
             user = new Usuario();

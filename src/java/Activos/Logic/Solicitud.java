@@ -6,6 +6,8 @@
 package Activos.Logic;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +18,8 @@ import java.util.List;
 public class Solicitud {
 
     //Tipos de solicitudes
-    public static final int INDF = 0;
     public static final int COMPRA = 1;
     public static final int DONACION = 2;
-    public static final int PRODUCCION = 3;
 
     //Estados
     public static final int RECIBIDA = 1;
@@ -41,9 +41,11 @@ public class Solicitud {
 
     public Solicitud() {
         this.comprobante = "";
-        java.util.Date uDate = new java.util.Date();
-        this.fecha = new Date(uDate.getTime());
-        this.tipo = 0;
+        LocalDate localdate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        Date date = Date.valueOf(localdate.format(formatter));
+        this.fecha = date;
+        this.tipo = 1;
         this.estado = 1;
         this.registrador = new Funcionario();
         this.dependencia = new Dependencia();
@@ -105,6 +107,12 @@ public class Solicitud {
         return fecha;
     }
 
+    public String getFechaString() {
+        LocalDate localdate = fecha.toLocalDate();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return localdate.format(formatter);
+    }
+
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
@@ -163,7 +171,7 @@ public class Solicitud {
 
     public void setBienes(List<Bien> bienes) {
         this.bienes = bienes;
-         this.cantidad = 0;
+        this.cantidad = 0;
 
         for (Bien b : bienes) {
             total = total + b.getPrecio();
@@ -177,11 +185,9 @@ public class Solicitud {
                 return "Compra";
             case DONACION:
                 return "Donacion";
-            case PRODUCCION:
-                return "Produccion";
+            default:
+                return "Indefinido";
         }
-
-        return "Indefinido";
     }
 
     public String getDescripcionEstado() {
@@ -189,11 +195,11 @@ public class Solicitud {
             case RECIBIDA:
                 return "Recibida";
             case POR_VERIFICAR:
-                return "Por verificar";
+                return "Por Verificar";
             case RECHAZADA:
-                return "rechazada";
+                return "Rechazada";
             case ESPERA_ROTULACION:
-                return "En espera de rotulacion";
+                return "Espera Rotulacion";
             case PROCESADA:
                 return "Procesada";
         }

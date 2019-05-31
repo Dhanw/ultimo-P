@@ -13,7 +13,6 @@ import Activos.Logic.Solicitud;
 import Activos.Logic.Usuario;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +37,7 @@ public class Dao {
             func.setNombre(rs.getString("nombre"));
             return func;
         } catch (SQLException ex) {
-            return null;
+            return new Funcionario();
         }
     }
 
@@ -53,7 +52,7 @@ public class Dao {
             user.setFuncionario(this.getFuncionario(idfunc));
             return user;
         } catch (SQLException ex) {
-            return null;
+            return new Usuario();
         }
     }
 
@@ -67,7 +66,7 @@ public class Dao {
             dependencia.setAdministrador(this.getFuncionario(setfun));
             return dependencia;
         } catch (SQLException ex) {
-            return null;
+            return new Dependencia();
         }
     }
 
@@ -88,7 +87,7 @@ public class Dao {
             solicitud.setBienes(this.getBienes(solicitud));
             return solicitud;
         } catch (SQLException ex) {
-            return null;
+            return new Solicitud();
         }
     }
 
@@ -104,7 +103,7 @@ public class Dao {
             bien.setSolicitud(getSolicitudH(rs));
             return bien;
         } catch (SQLException ex) {
-            return null;
+            return new Bien();
         }
     }
     // METODOS -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -118,7 +117,7 @@ public class Dao {
         if (rs.next()) {
             return getFuncionarioH(rs);
         } else {
-            return null;
+            return new Funcionario();
         }
     }
 
@@ -158,7 +157,7 @@ public class Dao {
         List<Funcionario> funcionarios = new ArrayList<>();
 
         String sql = "select f.`ID` ID,f.identificacion identificacion ,f.nombre nombre "
-                + "from funcionarios f, dependencias d, puestos p "
+                + "from Funcionarios f, Dependencias d, Puestos p "
                 + "where p.funcionario = f.`ID`and p.dependencia = d.`ID` and d.`ID` = %d group by ID";
         sql = String.format(sql, depe.getID());
 
@@ -184,7 +183,7 @@ public class Dao {
         if (rs.next()) {
             return getUsuarioH(rs);
         } else {
-            return null;
+            return new Usuario();
         }
     }
 
@@ -212,7 +211,7 @@ public class Dao {
         if (rs.next()) {
             return getDependenciaH(rs);
         } else {
-            return null;
+            return new Dependencia();
         }
 
     }
@@ -225,14 +224,14 @@ public class Dao {
         if (rs.next()) {
             return getDependenciaH(rs);
         } else {
-            return null;
+            return new Dependencia();
         }
     }
 
     public Dependencia getDependencia_fromFuncionarioV2(int id) throws SQLException, Exception {
         Dependencia dependencia = null;
         String sql = "select d.`ID`,d.nombre,d.ubicacion,d.administrador "
-                + "from funcionarios f, dependencias d, puestos p "
+                + "from Funcionarios f, Dependencias d, Puestos p "
                 + "where p.funcionario = f.`ID` and p.dependencia = d.`ID` and f.`ID` = %d";
         sql = String.format(sql, id);
         ResultSet rs = db.executeQuery(sql);
@@ -242,9 +241,10 @@ public class Dao {
             return null;
         }
     }
+
     public Dependencia getDependencia_FromNombre(String nombre) throws SQLException, Exception {
         Dependencia dependencia = null;
-        String sql = "select * from Dependencias where nombre ='"+nombre+"'";
+        String sql = "select * from Dependencias where nombre ='" + nombre + "'";
 //        sql = String.format(sql, id);
         ResultSet rs = db.executeQuery(sql);
         if (rs.next()) {
@@ -266,8 +266,9 @@ public class Dao {
             dependencia.setID(PK);
         }
     }
-     public void updateDependencia(Dependencia dependencia) throws Exception {
-        String sql="update dependencias set nombre='"+dependencia.getNombre()+"', ubicacion='"+dependencia.getUbicacion()+" where id='"+dependencia.getID()+"'";
+
+    public void updateDependencia(Dependencia dependencia) throws Exception {
+        String sql = "update Dependencias set nombre='" + dependencia.getNombre() + "', ubicacion='" + dependencia.getUbicacion() + " where id='" + dependencia.getID() + "'";
 //        sql = String.format(sql, dependencia.getNombre(), dependencia.getUbicacion(), dependencia.getAdministrador().getID());
         int PK = db.executeUpdateWithKeys(sql);
         if (PK == 0) {
@@ -276,7 +277,7 @@ public class Dao {
             dependencia.setID(PK);
         }
     }
-    
+
     public List<Dependencia> getDependencias() throws SQLException, Exception {
         List<Dependencia> dependencias = new ArrayList<>();
         String sql = "select * from Dependencias";
@@ -288,9 +289,9 @@ public class Dao {
         }
         return dependencias;
     }
-    
-      public void eliminarDependencia(int dependencia) throws SQLException {
-        String sql = "delete from Dependencias where id ='"+dependencia+"'";
+
+    public void eliminarDependencia(int dependencia) throws SQLException {
+        String sql = "delete from Dependencias where id ='" + dependencia + "'";
         int count = db.executeUpdate(sql);
         if (count == 0) {
             throw new SQLException("No existe la dependencia");
@@ -306,9 +307,8 @@ public class Dao {
         if (rs.next()) {
             return this.getBienH(rs);
         } else {
-            return null;
+            return new Bien();
         }
-
     }
 
     public List<Bien> getBienes(Solicitud solicitud) throws SQLException {
@@ -344,6 +344,15 @@ public class Dao {
         }
     }
 
+    public void deleteBien(Bien bien) throws Exception {
+        String sql = "delete from Bienes where ID=%d";
+        sql = String.format(sql, bien.getID());
+        int PK = db.executeUpdate(sql);
+        if (PK == 0) {
+            throw new Exception("Ocurrio un error al tratar de agregar el Bien");
+        }
+    }
+
     // Solicitud ------------------------------------------------------------------------------
     public Solicitud getSolicitud(int id) throws SQLException, Exception {
         Solicitud solicitud = null;
@@ -353,26 +362,48 @@ public class Dao {
         if (rs.next()) {
             return this.getSolicitudH(rs);
         } else {
-            return null;
+            return new Solicitud();
         }
     }
 
     public void addSolicitud(Solicitud solicitud) throws Exception {
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-        String currentTime = sdf1.format(solicitud.getFecha());
+        String sql = "insert into Solicitudes(comprobante,fecha,tipo,cantidad,total,estado,dependencia)"
+                + " values('%s','%s', %d,%d,%f,%d,%d) ";
 
-        String sql = "insert into Solicitudes(comprobante,fecha,tipo,cantidad,total,estado,dependencia,registrador)"
-                + " values('%s','%s', %d,%d,%f,%d,%d,%d) ";
-
-        sql = String.format(sql, solicitud.getComprobante(), currentTime, solicitud.getTipo(), solicitud.getCantidad(), solicitud.getTotal(),
-                solicitud.getEstado(), solicitud.getDependencia().getID(), solicitud.getRegistrador().getID());
+        sql = String.format(sql, solicitud.getComprobante(), solicitud.getFecha().toString(), solicitud.getTipo(), solicitud.getCantidad(), solicitud.getTotal(),
+                solicitud.getEstado(), solicitud.getDependencia().getID());
 
         int PK = db.executeUpdateWithKeys(sql);
 
         if (PK == 0) {
-            throw new Exception("Ocurrio un error al tratar de agregar el Bien");
+            throw new Exception("Ocurrio un error al tratar de agregar la Solicitud");
         } else {
             solicitud.setID(PK);
+        }
+    }
+
+    public void updateSolicitud(Solicitud solicitud) throws Exception {
+        String sql;
+        if (solicitud.getRegistrador().getID() != 0) {
+            sql = "update Solicitudes"
+                    + " set comprobante = '%s',fecha = '%s',tipo = %d,"
+                    + "cantidad = %d,total = %f,estado = %d,dependencia = %d,registrador = %d"
+                    + " where ID = %d";
+            sql = String.format(sql, solicitud.getComprobante(), solicitud.getFecha(), solicitud.getTipo(),
+                    solicitud.getCantidad(), solicitud.getTotal(), solicitud.getEstado(), solicitud.getDependencia().getID(),
+                    solicitud.getRegistrador().getID(), solicitud.getID());
+        } else {
+            sql = "update Solicitudes"
+                    + " set comprobante = '%s',fecha = '%s',tipo = %d,"
+                    + "cantidad = %d,total = %f,estado = %d,dependencia = %d"
+                    + " where ID = %d";
+            sql = String.format(sql, solicitud.getComprobante(), solicitud.getFecha(), solicitud.getTipo(),
+                    solicitud.getCantidad(), solicitud.getTotal(), solicitud.getEstado(), solicitud.getDependencia().getID(),
+                    solicitud.getID());
+        }
+        int PK = db.executeUpdate(sql);
+        if (PK == 0) {
+            throw new Exception("Ocurrio un error al tratar de actualizar la Solicitud");
         }
     }
 
@@ -455,8 +486,8 @@ public class Dao {
     public Puesto getPuestoFromFuncionario(int id) throws SQLException, Exception {
         Puesto puesto = null;
         String sql = "select p.ID, p.nombre, p.funcionario, p.dependencia "
-                + "from puestos p , funcionarios f "
-                + "where p.`ID` = f.`ID` "
+                + "from Puestos p , Funcionarios f "
+                + "where p.`funcionario` = f.`ID` "
                 + "and p.funcionario = %d";
         sql = String.format(sql, id);
         ResultSet rs = db.executeQuery(sql);
@@ -509,7 +540,7 @@ public class Dao {
     }
 
     public void contratar(Funcionario f, Puesto p) throws SQLException {
-        String sql = "update puestos set funcionario = %d where ID = %d";
+        String sql = "update Puestos set funcionario = %d where ID = %d";
         sql = String.format(sql, f.getID(), p.getID());
         int count = db.executeUpdate(sql);
         if (count == 0) {
@@ -519,7 +550,7 @@ public class Dao {
 
     public Puesto getPuesto(int p) throws SQLException, Exception {
         Puesto puesto = null;
-        String sql = "select * from puestos where ID = %d";
+        String sql = "select * from Puestos where ID = %d";
         sql = String.format(sql, p);
         ResultSet rs = db.executeQuery(sql);
         if (rs.next()) {
@@ -536,14 +567,14 @@ public class Dao {
     }
 
     public void descontratar(Funcionario f, boolean bandera) throws SQLException {
-        
-        if(bandera){
-        String sql = "update puestos set funcionario = null where funcionario = %d";
-        sql = String.format(sql, f.getID());
-        int count = db.executeUpdate(sql);
+
+        if (bandera) {
+            String sql = "update Puestos set funcionario = null where funcionario = %d";
+            sql = String.format(sql, f.getID());
+            int count = db.executeUpdate(sql);
         }
-        
-        String sql2 = "delete from funcionarios where ID = %d";
+
+        String sql2 = "delete from Funcionarios where ID = %d";
         sql2 = String.format(sql2, f.getID());
         int count2 = db.executeUpdate(sql2);
 
@@ -553,7 +584,7 @@ public class Dao {
     }
 
     public void updateFuncionarioNombre(Funcionario f, String nombre) throws SQLException {
-        String sql = "update funcionarios set nombre = '%s' where ID = %d";
+        String sql = "update Funcionarios set nombre = '%s' where ID = %d";
         sql = String.format(sql, nombre, f.getID());
         int count = db.executeUpdate(sql);
         if (count == 0) {
@@ -567,28 +598,27 @@ public class Dao {
         String sqlB;
         int countb = 0;
         if (p_nuevo != null) {
-            sql = "update puestos set funcionario = %d where ID = %d";
+            sql = "update Puestos set funcionario = %d where ID = %d";
             sql = String.format(sql, f.getID(), p_nuevo.getID());
             int countA = db.executeUpdate(sql);
-              
-            if(p_viejo != null){
-             sqlB = "update puestos set funcionario = null where ID = %d";
-             sqlB = String.format(sqlB, p_viejo.getID());
-             countb = db.executeUpdate(sqlB);
+
+            if (p_viejo != null) {
+                sqlB = "update Puestos set funcionario = null where ID = %d";
+                sqlB = String.format(sqlB, p_viejo.getID());
+                countb = db.executeUpdate(sqlB);
             }
-          
 
         } else {
-            
-             if (p_viejo != null) {
-            sql = "update puestos set funcionario = null where ID = %d";
-            sql = String.format(sql, p_viejo.getID());
-            int count = db.executeUpdate(sql);
-            if (count == 0) {
-                throw new SQLException("ERROR");
+
+            if (p_viejo != null) {
+                sql = "update Puestos set funcionario = null where ID = %d";
+                sql = String.format(sql, p_viejo.getID());
+                int count = db.executeUpdate(sql);
+                if (count == 0) {
+                    throw new SQLException("ERROR");
+                }
+
             }
-            
-              }
         }
 
     }

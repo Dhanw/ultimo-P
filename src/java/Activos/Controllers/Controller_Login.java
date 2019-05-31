@@ -10,6 +10,8 @@ import static Activos.Logic.Usuario.ADMINISTRADOR_DEPENDENCIA;
 import static Activos.Logic.Usuario.JEFE_RRH;
 import Activos.Models.Model_Login;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,15 +28,6 @@ public class Controller_Login extends HttpServlet {
 
     private Model_Login model = new Model_Login();
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -65,19 +58,81 @@ public class Controller_Login extends HttpServlet {
         request.getRequestDispatcher("/UserLogin/Login_View.jsp").forward(request, response);
     }
 
-    private void Login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Busca el usuario en la DB, si no lo encuentra se regresa al login
-        this.updateModel(model.getUser(), request);
+    private Boolean is_NULL(HttpServletRequest request) {
+        return request.getParameter("cuenta") == null || request.getParameter("password") == null;
+    }
+
+    private Boolean is_Default(Usuario user) {
+        return user.getID() == 0 || user.getCuenta().isEmpty() || user.getPassword().isEmpty();
+    }
+
+    private Map<String, String> validate_Fields(HttpServletRequest request) {
+        Map<String, String> errores = new HashMap<>();
+        String username = request.getParameter("cuenta");
+        String password = request.getParameter("password");
+        Usuario sesion = null;
         try {
-            Usuario sesion = model.Login(request.getParameter("cuenta"), request.getParameter("password"));
-            if (sesion != null) {
-                request.getSession(true).setAttribute("user", sesion);
-                request.getSession(true).setAttribute("estado", "terminado");
-                this.seleccionador(request, response, sesion.getRol());
-            } else {
-                request.getRequestDispatcher("/UserLogin/PrepareLogin").forward(request, response);
-            }
+            sesion = model.Login(username, password);
         } catch (Exception ex) {
+        }
+        if (username.isEmpty()) {
+            errores.put("cuenta", "EMPTY");
+        } else {
+            if (is_Default(sesion)) {
+                errores.put("cuenta", "WRONG");
+            } else {
+                errores.put("cuenta", "RIGHT");
+            }
+        }
+
+        if (password.isEmpty()) {
+            errores.put("password", "EMPTY");
+        } else {
+            if (is_Default(sesion)) {
+                errores.put("password", "WRONG");
+            } else {
+                errores.put("password", "RIGHT");
+            }
+        }
+
+        return no_Errors(errores) ? new HashMap<>() : errores;
+    }
+
+    private Boolean no_Errors(Map<String, String> errores) {
+        for (String str : errores.values()) {
+            if (!str.equals("RIGHT")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void Login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (!this.is_NULL(request)) {
+            Usuario usuario = model.getUser();
+            this.updateModel(usuario, request);
+            request.setAttribute("user", usuario);
+            Map<String, String> errors = this.validate_Fields(request);
+            if (errors.isEmpty()) {
+                try {
+                    Usuario sesion = model.Login(request.getParameter("cuenta"), request.getParameter("password"));
+                    if (sesion != null) {
+                        request.getSession(true).setAttribute("user", sesion);
+                        request.getSession(true).setAttribute("estado", "terminado");
+                        this.seleccionador(request, response, sesion.getRol());
+                    } else {
+                        request.getRequestDispatcher("/UserLogin/PrepareLogin").forward(request, response);
+                    }
+                } catch (Exception ex) {
+                }
+            } else {
+                {
+                    request.setAttribute("errors", errors);
+                    request.getRequestDispatcher("/UserLogin/PrepareLogin").forward(request, response);
+                }
+            }
+        } else {
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
     }
 
@@ -85,7 +140,8 @@ public class Controller_Login extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(true);
         session.invalidate();
-        request.getRequestDispatcher("/UserLogin/Login_View.jsp").forward(request, response);
+        model.setUser(new Usuario());
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
 
     private void seleccionador(HttpServletRequest request, HttpServletResponse response, int tipo) throws ServletException, IOException {
@@ -93,7 +149,7 @@ public class Controller_Login extends HttpServlet {
             case ADMINISTRADOR_DEPENDENCIA:
                 request.getRequestDispatcher("/Solicitud/Solicitud_listar").forward(request, response);
                 break;
-            case JEFE_RRH:
+                case JEFE_RRH:
                 request.getRequestDispatcher("/Funcionario/Funcionario_listar").forward(request, response);
                 break;
         }
@@ -137,5 +193,4 @@ public class Controller_Login extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

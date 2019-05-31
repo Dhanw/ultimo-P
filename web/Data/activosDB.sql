@@ -203,3 +203,4 @@ insert into Usuarios(cuenta,password,rol,funcionario) values("jefe_OCCB_RRHH","d
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+    
