@@ -255,10 +255,9 @@ public class Dao {
     }
 
     public void addDependencia(Dependencia dependencia) throws Exception {
-        String sql = "insert into Dependencias(nombre,ubicacion,administrador)"
-                + " values('%s','%s',%d)";
+        String sql = "insert into Dependencias(nombre,ubicacion,administrador) values('"+dependencia.getNombre() +"',"+dependencia.getUbicacion() +"',"+dependencia.getAdministrador().getID() +" )";
 
-        sql = String.format(sql, dependencia.getNombre(), dependencia.getUbicacion(), dependencia.getAdministrador().getID());
+//        sql = String.format(sql, dependencia.getNombre(), dependencia.getUbicacion(), dependencia.getAdministrador().getID());
         int PK = db.executeUpdateWithKeys(sql);
         if (PK == 0) {
             throw new Exception("Ocurrio un error al tratar de agregar el Funcionario");
