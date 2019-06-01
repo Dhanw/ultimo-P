@@ -49,6 +49,7 @@ public class Controller_Funcionario extends HttpServlet {
                 } catch (Exception ex) {
                     Logger.getLogger(Controller_Funcionario.class.getName()).log(Level.SEVERE, null, ex);
                 }
+
             }
             break;
             case "/Funcionario/Funcionario_Crear": {
@@ -155,11 +156,11 @@ public class Controller_Funcionario extends HttpServlet {
         Model_Funcionario tmp = null;
         for (Funcionario f : todos) {
             Puesto puesto = Model.instance().getPuestoFromFuncionario(f.getID());
-
+            boolean user = Model.instance().isUsuario(f.getID());
             if (puesto != null) {
-                tmp = new Model_Funcionario(f.getID(), f.getNombre(), f.getIdentificacion(), puesto);
+                tmp = new Model_Funcionario(f.getID(), f.getNombre(), f.getIdentificacion(), puesto, user);
             } else {
-                tmp = new Model_Funcionario(f.getID(), f.getNombre(), f.getIdentificacion(), null);
+                tmp = new Model_Funcionario(f.getID(), f.getNombre(), f.getIdentificacion(), null, user);
             }
             funcionarios.add(tmp);
         }
@@ -229,11 +230,12 @@ public class Controller_Funcionario extends HttpServlet {
             String a = f.getNombre().toUpperCase();
             String b = filtro.toUpperCase();
             if (a.matches(".*" + b + ".*")) {
-                if (puesto != null) {
-                    tmp = new Model_Funcionario(f.getID(), f.getNombre(), f.getIdentificacion(), puesto);
-                } else {
-                    tmp = new Model_Funcionario(f.getID(), f.getNombre(), f.getIdentificacion(), null);
-                }
+               boolean user = Model.instance().isUsuario(f.getID());
+            if (puesto != null) {
+                tmp = new Model_Funcionario(f.getID(), f.getNombre(), f.getIdentificacion(), puesto, user);
+            } else {
+                tmp = new Model_Funcionario(f.getID(), f.getNombre(), f.getIdentificacion(), null, user);
+            }
                 funcionarios.add(tmp);
             }
         }

@@ -22,12 +22,10 @@
             <center>
                 <%
                     Usuario use = (Usuario) session.getAttribute("user");
-
-                    Dependencia dep = (Dependencia) request.getAttribute("dependencia");
                     List<Puesto> puestos = (List<Puesto>) request.getAttribute("puestos");
 
                 %>
-                <h2>Agregar Funcionario - (<%=dep.getNombre()%>)</h2>
+                <h2>Agregar Funcionario</h2>
                 <div class="row">
                     <br><br>
                     <div class="col-md-12">

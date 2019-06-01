@@ -190,5 +190,8 @@ public class Model {
     public List<Dependencia> getDependencias() throws SQLException, Exception {
         return dao.getDependencias();
     }
+    public boolean isUsuario(int id) throws SQLException {
+        return dao.isUsuario(id);
+    }
 
 }

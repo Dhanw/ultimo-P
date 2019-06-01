@@ -17,13 +17,22 @@ public class Model_Funcionario {
     String nombre;
     String cedula;
     Puesto puesto;
+    boolean usuario;
 
-
-    public Model_Funcionario(int id, String nombre, String cedula, Puesto puesto) {
+    public Model_Funcionario(int id, String nombre, String cedula, Puesto puesto, boolean usuario) {
         this.id = id;
         this.nombre = nombre;
         this.cedula = cedula;
         this.puesto = puesto;
+        this.usuario = usuario;
+    }
+
+    public boolean isUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(boolean usuario) {
+        this.usuario = usuario;
     }
 
     public Dependencia getDependencia() {

@@ -620,4 +620,11 @@ public class Dao {
         }
 
     }
+    
+    public boolean isUsuario(int id) throws SQLException {
+        String sql = "select u.ID from usuarios u,funcionarios f where u.funcionario = f.ID and f.ID = %d";
+        sql = String.format(sql, id);
+        ResultSet  rs= db.executeQuery(sql);
+        return rs.next(); 
+    }
 }

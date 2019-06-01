@@ -71,6 +71,7 @@
                 <tbody>
                     <%
                         for (Model_Funcionario f : funcionarios) {
+                            if(!f.isUsuario()){
                     %>
                     <tr class="item">
                         <td><%=f.getCedula()%></td>
@@ -82,11 +83,12 @@
                         <td>Sin asignar</td>
                         <td>Sin asignar</td>
                         <%} %>
+                        
                         <td><a href="Funcionario/Funcionario_eliminar?ID=<%=f.getId()%>"><img width=30px" src="Images/delete.png"/></a></td>
                         <% int p = 0; if(f.getPuesto() != null) p = f.getPuesto().getID(); %>
                         <td><a href="Funcionario/Funcionario_editar?ID=<%=f.getId()%>&cedula=<%=f.getCedula()%>&nombre=<%=f.getNombre()%>&PID=<%=p%>"><img width=30px" src="Images/content.png"/></a></td>
                     </tr>
-                    <%} %>
+                    <%}} %>
                 </tbody>
             </table>
         </div>
