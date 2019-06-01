@@ -71,15 +71,15 @@
                             <form  class="form" method="POST">
                                 <h4>Actualizar Dependencia</h4>
                                 <div class="form-group">
-                                    <input name="idf1"  id="idf1" type="text" class="form-control"  placeholder="id" >
+                                    <input name="idf4"  id="idf4" type="text" class="form-control"  placeholder="id" >
                                 </div>
                                 <br>
                                 <div class="form-group">
-                                    <input name="nombre1"  id="nombre1" type="text" class="form-control"  placeholder="nombre" >
+                                    <input name="nombre4"  id="nombre4" type="text" class="form-control"  placeholder="nombre" >
                                 </div>
                                 <br>
                                 <div class="form-group">
-                                    <input name="ubicacion1" id="ubicacion1" type="text" class="form-control" placeholder="ubicacion" >
+                                    <input name="ubicacion4" id="ubicacion4" type="text" class="form-control" placeholder="ubicacion" >
                                 </div>  
                                 <br>
 
@@ -130,7 +130,7 @@
             <!--termina pop up -->
             
             <table class="table table-hover">
-                <thead><tr><th>Id</th><th>Nombre</th><th>Ubicacion</th><th>Edit</th><th>Delete</th></tr></thead>
+                <thead><tr><th>Id</th><th>Nombre</th><th>Ubicacion</th><th>Administrador</th><th>Edit</th><th>Delete</th></tr></thead>
                 <tbody id="contenido">
                 </tbody>
             </table>   
@@ -204,7 +204,7 @@
                                <form  class="form-inline" method="POST"> <!--inicio -->
                                
                                 <div class="form">
-                                    <input name="idf1"  id="idf1" type="text" class="form-control"  placeholder="nombre" >
+                                    <input name="idf1"  id="idf1" type="text" class="form-control"  placeholder="id" readonly>
                                 </div>
                                 <div class="form">
                                     <input name="nombre1"  id="nombre1" type="text" class="form-control"  placeholder="nombre" >
@@ -222,7 +222,7 @@
                                    <br>
                                 <br>
                                 <div class="form-group">
-                                    <input type="button" class="btn btn-default" value="Guardar" onclick="actualizar()">
+                                    <input type="button" class="btn btn-default" value="Actualizar" onclick="actualizar()">
                                 </div>
                                 <br>
                             </form> 
@@ -258,7 +258,7 @@
             
             
              function Funcio_Depe() { // carga el funcionario del 
-                 var id = document.getElementById("mySelect").value;
+                 var id = document.getElementById("mySelect1").value;
                 $.ajax({
                     type: "POST",
                     url: "Funcionario",
@@ -275,6 +275,26 @@
                             }
                 });
             }
+            
+            function Funcio_Depe2() { // carga el funcionario del 
+                 var id = document.getElementById("mySelect").value;
+                $.ajax({
+                    type: "POST",
+                    url: "Funcionario",
+                    data: JSON.stringify(id),
+                    dataType: "json",
+                    success:
+                            function (obj) {
+                                actualizar();
+                            },
+                            
+                    error:
+                            function (status) {
+                                
+                            }
+                });
+            }
+            
             
             function verFuncionarios1() {
                 $.ajax({
@@ -386,6 +406,7 @@
                             "<td>" + dependenciasList[i].ID + "</td>" +
                             "<td>" + dependenciasList[i].nombre + "</td>" +
                             "<td>" + dependenciasList[i].ubicacion + "</td>" +
+                            "<td>" + dependenciasList[i].administrador.nombre + "</td>" +
                             "<td><img src='Images/binoculars.png' onclick='Editar(\"" + dependenciasList[i].ID + "\");'></td>" +
                             "<td><img src='Images/delete.png' onclick='Eliminar(\"" + dependenciasList[i].ID + "\");'></td></tr>"
                             );
@@ -420,24 +441,36 @@
                 
             }
             function actualizar() {
+                var e = document.getElementById("mySelect").value;
+                
                 Dependencia = {
                     ID: $("#idf1").val(),
                     nombre: $("#nombre1").val(),
-                    ubicacion: $("#ubicacion1").val()
-                };
+                    ubicacion: $("#ubicacion1").val(),
+                    administrador : { ID:e.valueOf()}
+                    };
                 clean();
                 $.ajax({type: "POST",
                     url: "ActualizarDependencia",
                     data: JSON.stringify(Dependencia),
                     dataType: "json",
-                    success: 
-                            function () {
-                                
-                            },
+                    success: verDependencias(),
                    error: function (jqXHR) {alert(errorMessage(jqXHR.status));}
                });
-               verDependencias();
+ 
+           xd();
            }
+            function xd() {
+                                $('#myModal1').modal('hide')
+                                verDependencias();
+                          }
+             function xd2() {
+                                $('#myModal').modal('hide')
+                                verDependencias();
+                          }
+
+           
+           
            function Eliminar(id) {
                var edad = id;
                $.ajax({
@@ -487,9 +520,7 @@
                    data: JSON.stringify(Dependencia),
                    dataType: "json",
                    success:
-                           function (obj) {
-                               
-                           },
+                            xd2(),
                    error:
                            function (status) {
                                
