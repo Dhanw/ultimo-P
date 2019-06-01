@@ -49,7 +49,6 @@ public class Controller_Funcionario extends HttpServlet {
                 } catch (Exception ex) {
                     Logger.getLogger(Controller_Funcionario.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
             }
             break;
             case "/Funcionario/Funcionario_Crear": {

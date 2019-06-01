@@ -9,7 +9,9 @@ import Activos.Logic.Dependencia;
 import Activos.Logic.Funcionario;
 import Activos.Logic.Model;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -47,6 +49,10 @@ public class Model_Departamento {
     
     public Dependencia get(int id)throws Exception{
         return this.domainModel.getDependencia(id);
+    }   
+        
+      public Funcionario getFuncionario(int id)throws Exception{
+        return this.domainModel.getFuncionario(id);
     }   
         
      public  List<Funcionario> listaFunc() throws Exception{
