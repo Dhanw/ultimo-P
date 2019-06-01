@@ -168,7 +168,7 @@
                                    <br>
                                 <br>
                                 <div class="form-group">
-                                    <input type="button" class="btn btn-default" value="Guardar" onclick="crearDependencia()">
+                                    <input type="button" class="btn btn-default" value="Guardar" onclick="Funcio_Depe()">
                                 </div>
                                 <br>
                             </form> <!-- Fin  -->
@@ -183,7 +183,7 @@
   </div>
 </div>
                  
-  <button type="button" class="btn btn-info " data-toggle="modal" data-target="#myModal1">Editar</button>
+  <!-- <button type="button" class="btn btn-info " data-toggle="modal" data-target="#myModal1">Editar</button> -->
 
 <!--probando como es que gitkraken funciona   -->
 <!-- No funciona la primera prueba, ahora haciendo con netbeans-->
@@ -204,11 +204,11 @@
 <form  class="form-inline" method="POST"> <!--inicio -->
                                
                                 <div class="form">
-                                    <input name="nombre2"  id="nombre2" type="text" class="form-control"  placeholder="nombre" >
+                                    <input name="nombre1"  id="nombre2" type="text" class="form-control"  placeholder="nombre" >
                                 </div>
                                 <br>
                                 <div class="form-group">
-                                    <input name="ubicacion2" id="ubicacion2" type="text" class="form-control" placeholder="ubicacion" >
+                                    <input name="ubicacion1" id="ubicacion2" type="text" class="form-control" placeholder="ubicacion" >
                                 </div>  
                 
                                 <br>
@@ -254,6 +254,27 @@
             function AgregarDependencias(){
             document.getElementById('id02').style.display = 'block';
             }
+            
+            
+             function Funcio_Depe() { // carga el funcionario del 
+                 var id = document.getElementById("mySelect").value;
+                $.ajax({
+                    type: "POST",
+                    url: "Funcionario",
+                    data: JSON.stringify(id),
+                    dataType: "json",
+                    success:
+                            function (obj) {
+                                crearDependencia(obj);
+                            },
+                            
+                    error:
+                            function (status) {
+                                
+                            }
+                });
+            }
+            
             function verFuncionarios1() {
                 $.ajax({
                     type: "GET",
@@ -373,6 +394,7 @@
             
             
             function Editar(dependencia) {
+                
                 var edad = dependencia;
                 $.ajax({
                     type: "POST",
@@ -388,7 +410,7 @@
                                 
                             }
                 });
-                document.getElementById('myModal1').style.display = 'block';
+                $("#myModal1").modal('show');
             }
             function mostrar(per) {
                 $("#idf1").val(per.ID);
@@ -432,24 +454,29 @@
                });
                verDependencias();
            }
+           
            function removeRows() {
                $(".rowContenido").remove();
            }
+           
            function clean() {
                $("#nombre1").val("");
                $("#ubicacion1").val("");
                $("#idf1").val("");
            }
+           
             function clean1() {
                $("#nombre2").val("");
                $("#ubicacion2").val("");
                $("#idf2").val("");
            }
-           function crearDependencia() {
+           
+           
+           function crearDependencia(funcionario ) {
                Dependencia = {
                    nombre: $("#nombre2").val(),
                    ubicacion: $("#ubicacion2").val(),
-                   id: $("#idf2").val()
+                   administrador: funcionario
                };
                clean1(); //limpia los campos del form
                $.ajax({
