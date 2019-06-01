@@ -201,7 +201,7 @@
       </div>
       <div class="modal-body">
         
-<form  class="form-inline" method="POST"> <!--inicio -->
+                               <form  class="form-inline" method="POST"> <!--inicio -->
                                
                                 <div class="form">
                                     <input name="idf1"  id="idf1" type="text" class="form-control"  placeholder="nombre" >
@@ -222,7 +222,7 @@
                                    <br>
                                 <br>
                                 <div class="form-group">
-                                    <input type="button" class="btn btn-default" value="Guardar" onclick="Editar()">
+                                    <input type="button" class="btn btn-default" value="Guardar" onclick="actualizar()">
                                 </div>
                                 <br>
                             </form> 
