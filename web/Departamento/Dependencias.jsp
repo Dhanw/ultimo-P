@@ -204,16 +204,17 @@
 <form  class="form-inline" method="POST"> <!--inicio -->
                                
                                 <div class="form">
-                                    <input name="nombre1"  id="nombre2" type="text" class="form-control"  placeholder="nombre" >
+                                    <input name="idf1"  id="idf1" type="text" class="form-control"  placeholder="nombre" >
+                                </div>
+                                <div class="form">
+                                    <input name="nombre1"  id="nombre1" type="text" class="form-control"  placeholder="nombre" >
                                 </div>
                                 <br>
                                 <div class="form-group">
-                                    <input name="ubicacion1" id="ubicacion2" type="text" class="form-control" placeholder="ubicacion" >
+                                    <input name="ubicacion1" id="ubicacion1" type="text" class="form-control" placeholder="ubicacion" >
                                 </div>  
-                
                                 <br>
                                 <br>
-                                
                                   <div class="form-group">
                                      <select  id="mySelect" class="form-control"  placeholder="id" name="mySelect">  
                                      </select>
@@ -393,13 +394,13 @@
             }
             
             
-            function Editar(dependencia) {
+            function Editar(id) {
                 
-                var edad = dependencia;
+                var edad = id;
                 $.ajax({
                     type: "POST",
                     url: "EditarDependencia",
-                    data: JSON.stringify(edad),
+                    data: JSON.stringify(id),
                     dataType: "json",
                     success:
                             function (obj) {
@@ -416,6 +417,7 @@
                 $("#idf1").val(per.ID);
                 $("#nombre1").val(per.nombre);
                 $("#ubicacion1").val(per.ubicacion);
+                
             }
             function actualizar() {
                 Dependencia = {
