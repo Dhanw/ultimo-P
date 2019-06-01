@@ -16,14 +16,17 @@
                 <%if (user.getRol() == Usuario.ADMINISTRADOR_DEPENDENCIA) {%>
             <li><a href="Solicitud/Solicitud_listar"> Solicitudes </a></li>
             <li><a href="Departamento/Dependencias.jsp">Dependencias</a></li>
+            <li><a href="Bienes/Bienes.jsp">Bienes</a></li>
                 <%}%>
                 <%if (user.getRol() == Usuario.JEFE_RRH) {%>
             <li><a href="Funcionario/Funcionario_listar">Listado</a></li>
             <li><a href="Funcionario/Funcionario_Crear">Añadir Funcionario</a></li>
             <li><a href="Departamento/Dependencias.jsp">Dependencias</a></li>
+            <li><a href="Bienes/Bienes.jsp">Bienes</a></li>
                 <%}%>
                 <%if (user.getRol() == Usuario.SECRETARIA_OCCB) {%>
             <li><a href="Solicitud/Solicitud_listar"> Solicitudes </a></li>
+            <li><a href="Bienes/Bienes.jsp">Bienes</a></li>
                 <%}%>
                 <%if (user.getRol() == Usuario.JEFE_OCCB) {%>
                 <%}%>

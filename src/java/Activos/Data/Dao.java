@@ -6,6 +6,7 @@
 package Activos.Data;
 
 import Activos.Logic.Bien;
+import Activos.Logic.Categoria;
 import Activos.Logic.Dependencia;
 import Activos.Logic.Funcionario;
 import Activos.Logic.Puesto;
@@ -268,7 +269,7 @@ public class Dao {
     }
 
     public void updateDependencia(Dependencia dependencia) throws Exception {
-        String sql = "update Dependencias set nombre='" + dependencia.getNombre() + "', ubicacion='" + dependencia.getUbicacion() + "', administrador= '"+dependencia.getAdministrador().getID() +"'  where id='" + dependencia.getID() + "'";
+        String sql = "update Dependencias set nombre='" + dependencia.getNombre() + "', ubicacion='" + dependencia.getUbicacion() + "', administrador= '" + dependencia.getAdministrador().getID() + "'  where id='" + dependencia.getID() + "'";
 //        sql = String.format(sql, dependencia.getNombre(), dependencia.getUbicacion(), dependencia.getAdministrador().getID());
         int PK = db.executeUpdateWithKeys(sql);
         if (PK == 0) {
@@ -620,11 +621,77 @@ public class Dao {
         }
 
     }
-    
+
     public boolean isUsuario(int id) throws SQLException {
         String sql = "select u.ID from usuarios u,funcionarios f where u.funcionario = f.ID and f.ID = %d";
         sql = String.format(sql, id);
-        ResultSet  rs= db.executeQuery(sql);
-        return rs.next(); 
+        ResultSet rs = db.executeQuery(sql);
+        return rs.next();
+    }
+
+    // CATEGORIA ------------------------------------------------------------------------------
+    public void updateCategoria(Categoria cat) throws Exception {
+      String sql = "update Categoria set descripcion = '%s' where ID = %d";
+        sql = String.format(sql, cat.getDescripcion(), cat.getID());
+        int count = db.executeUpdate(sql);
+        if (count == 0) {
+            throw new SQLException("ERROR");
+        }
+    }
+
+    public void deleteCategoria(int cat) throws Exception {
+        String sql = "delete from Categoria where ID = %d";
+        sql = String.format(sql, cat);
+        int count = db.executeUpdate(sql);
+        if (count == 0) {
+            throw new SQLException("No existe la categoria  ");
+        }
+    }
+
+    public void addCategoria(Categoria cat) throws Exception {
+        String sql = "insert into Categoria(descripcion)"
+                + " values('%s')";
+
+        sql = String.format(sql, cat.getDescripcion());
+
+        int PK = db.executeUpdateWithKeys(sql);
+
+        if (PK == 0) {
+            throw new Exception("Ocurrio un error al tratar de agregar la descripcion");
+        } else {
+            cat.setID(PK);
+        }
+    }
+
+    public Categoria getCategoria(int id) throws SQLException {
+        Funcionario func = null;
+        String sql = "select * from Categoria where ID = %d";
+        sql = String.format(sql, id);
+        ResultSet rs = db.executeQuery(sql);
+        if (rs.next()) {
+            return getCategoriaH(rs);
+        } else {
+            return new Categoria();
+        }
+    }
+
+    public List<Categoria> getCategorias() throws SQLException {
+        List<Categoria> categorias = new ArrayList<>();
+
+        String sql = "select * from Categoria";
+        ResultSet rs = db.executeQuery(sql);
+        Funcionario func = null;
+        while (rs.next()) {
+            categorias.add(this.getCategoriaH(rs));
+        }
+
+        return categorias;
+    }
+
+    private Categoria getCategoriaH(ResultSet rs) throws SQLException {
+        Categoria cat = new Categoria();
+        cat.setID(rs.getInt("ID"));
+        cat.setDescripcion(rs.getString("descripcion"));
+        return cat;
     }
 }

@@ -13,11 +13,11 @@ public class Activo {
 
     int ID;
     String codigo;
-    String categoria;
+    Categoria categoria;
     String descripcion;
     Puesto puesto;
 
-    public Activo(int ID, String codigo, String categoria, String descripcion, Puesto puesto) {
+    public Activo(int ID, String codigo, Categoria categoria, String descripcion, Puesto puesto) {
         this.ID = ID;
         this.codigo = codigo;
         this.categoria = categoria;
@@ -25,11 +25,15 @@ public class Activo {
         this.puesto = puesto;
     }
 
-    public Activo(String codigo, String categoria, String descripcion, Puesto puesto) {
+    public Activo(String codigo, Categoria categoria, String descripcion, Puesto puesto) {
         this.codigo = codigo;
         this.categoria = categoria;
         this.descripcion = descripcion;
         this.puesto = puesto;
+    }
+
+    public Activo() {
+        
     }
 
     public int getID() {
@@ -48,11 +52,11 @@ public class Activo {
         this.codigo = codigo;
     }
 
-    public String getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
 

@@ -380,6 +380,7 @@
                             }
                 });
             }
+            
             function buscarPorEdad() {
                 var edad = $("#Buscar").val();
                 $.ajax({

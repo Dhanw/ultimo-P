@@ -6,7 +6,9 @@
 package Activos.Logic;
 
 import Activos.Data.Dao;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -193,5 +195,30 @@ public class Model {
     public boolean isUsuario(int id) throws SQLException {
         return dao.isUsuario(id);
     }
+    //--------------------------------------------------------------------METODOS DE CATEGORIA
+        public void addCategoria(Categoria cat) throws Exception {
+        dao.addCategoria(cat);
+    }
+
+    public Categoria getCategoria(int id) throws SQLException {
+        return dao.getCategoria(id);
+    
+    }
+
+    public List<Categoria> getCategorias() throws SQLException {
+        return dao.getCategorias();
+    }
+
+        public void updateCategoria(Categoria dependencia) throws Exception {
+        dao.updateCategoria(dependencia);
+    }
+
+    public void eliminarCategoria(int dependencia) throws Exception {
+        dao.deleteCategoria(dependencia);
+    }
+    
+    
+    
+    
 
 }
