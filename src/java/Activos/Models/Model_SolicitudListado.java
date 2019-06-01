@@ -8,6 +8,8 @@ package Activos.Models;
 import Activos.Logic.Dependencia;
 import Activos.Logic.Model;
 import Activos.Logic.Solicitud;
+import static Activos.Logic.Usuario.ADMINISTRADOR_DEPENDENCIA;
+import static Activos.Logic.Usuario.SECRETARIA_OCCB;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,8 +59,20 @@ public class Model_SolicitudListado {
         return solicitudes;
     }
 
-    public void updateDependencia(int id_funcionario) throws Exception {
-        Dependencia d = domainModel.getDependencia_fromFuncionario(id_funcionario);
+    public void updateDependencia(int id_funcionario, int rol) throws Exception {
+        Dependencia d;
+        switch (rol) {
+            case ADMINISTRADOR_DEPENDENCIA:
+                d = domainModel.getDependencia_fromFuncionario(id_funcionario);
+                break;
+            case SECRETARIA_OCCB:
+                d = domainModel.getDependencia_fromFuncionarioV2(id_funcionario);
+                break;
+            default:
+                d = new Dependencia();
+                break;
+        }
+
         this.setDependencia(d);
     }
 

@@ -1,6 +1,6 @@
 <%-- 
-    Document   : Solicitud_Editar
-    Created on : 19/05/2019, 04:27:50 PM
+    Document   : Solicitud_Agregar
+    Created on : 19/05/2019, 04:27:22 PM
     Author     : wizard
 --%>
 
@@ -24,26 +24,7 @@
         default:
             break;
     }%>
-<%String recibida = "", verificar = "", rechazada = "", rotulacion = "", procesada = "";%>
-<%switch (solicitud.getEstado()) {
-        case 1:
-            recibida = "Selected";
-            break;
-        case 2:
-            verificar = "Selected";
-            break;
-        case 3:
-            rechazada = "Selected";
-            break;
-        case 4:
-            rotulacion = "Selected";
-            break;
-        case 5:
-            procesada = "Selected";
-            break;
-        default:
-            break;
-    }%>
+<%String tipoSolicitud = (String) request.getAttribute("tipoSolicitud");%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -77,18 +58,13 @@
                     </div>
                     <div class="form-group">
                         <label for="Estado_Comprobante">Estado:</label>
-                        <select class="form-control" id="estado" name="estado" disabled>
-                            <option <%=recibida.toString()%> value="1"> Recibida </option>
-                            <option <%=verificar.toString()%> value="2"> Por Verificar </option>
-                            <option <%=rechazada.toString()%> value="3"> Rechazada </option>
-                            <option <%=rotulacion.toString()%> value="4"> Rotulacion </option>
-                            <option <%=procesada.toString()%> value="5"> Donacion </option>
-                        </select>
+                        <input type="text" class="form-control" id="estado" placeholder="Default" name="estado" value="<%=solicitud.getDescripcionEstado()%>" disabled>
                     </div>
-                    <button type="submit" class="btn btn-success"> Actualizar </button>
+                    <button type="submit" class="btn btn-success"> Guardar </button>
                 </form>
             </center>
             <br>
+            <%if (user.getRol() == Usuario.ADMINISTRADOR_DEPENDENCIA) {%>
             <center>
                 <h4>Ingresar un nuevo articulo</h4>
             </center>
@@ -111,6 +87,8 @@
                 </div>
                 <button type="submit" class="btn btn-primary"> Añadir </button>
             </form>
+            <%}%>
+
             <br>
             <table class="table table-hover">
                 <thead>
@@ -131,7 +109,7 @@
                         <td><%=b.getModelo()%></td>
                         <td><%=b.getPrecio()%></td>
                         <td><%=b.getCantidad()%></td>
-                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="Solicitud/Solicitud_eliminar_bien?tipoSolicitud=editar&ID=<%=b.getID()%>"><span class="glyphicon glyphicon-remove"></span></a></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="Solicitud/Solicitud_eliminar_bien?tipoSolicitud=agregar&ID=<%=b.getID()%>"><span class="glyphicon glyphicon-remove"></span></a></td>
                     </tr>
                     <%}%>
                 </tbody>
@@ -155,9 +133,11 @@
             values.put("cantidad", new String[]{String.valueOf(bien.getCantidad())});
         }
         return values;
+
     }%>
 <%!private String getValue(String field, Map<String, String[]> user_values) {
         return user_values.get(field)[0];
+
     }%>
 <%!private String check_Errors(String field, Map<String, String> list_errors) {
         if (list_errors != null) {

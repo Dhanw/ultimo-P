@@ -238,7 +238,7 @@ public class Dao {
         if (rs.next()) {
             return getDependenciaH(rs);
         } else {
-            return null;
+            return new Dependencia();
         }
     }
 

@@ -160,7 +160,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Activos` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 insert into Funcionarios(identificacion,nombre) values(403013010,"Oscar Campos");
 insert into Funcionarios(identificacion,nombre) values(104294103,"Gabriel Jimenez");
 insert into Funcionarios(identificacion,nombre) values(204030103,"Jose Quiroz");
@@ -170,25 +169,26 @@ insert into Funcionarios(identificacion,nombre) values(634203014,"Bryan Ruiz");
 insert into Funcionarios(identificacion,nombre) values(421421412,"Jose Sanchez");
 insert into Funcionarios(identificacion,nombre) values(532523523,"Marta Quriroz");
 insert into Funcionarios(identificacion,nombre) values(532525276,"Oscar Ortega");
-insert into Funcionarios(identificacion,nombre) values(421412423,"Felipe Ruiz");
+insert into Funcionarios(identificacion,nombre) values(903690258,"Arelis Picado");
+insert into Funcionarios(identificacion,nombre) values(702580254,"Diego Babb");
+insert into Funcionarios(identificacion,nombre) values(908520147,"Enibeth Sanchez");
+insert into Funcionarios(identificacion,nombre) values(605820174,"Naomi Rojas");
+
 
 insert into Dependencias(nombre,ubicacion,administrador) values('Escuela de informatica','Lagunilla-Heredia',1);
 insert into Dependencias(nombre,ubicacion,administrador) values('Escuela de matematica','Heredia Centro',NULL);
 
 
-insert into Puestos(nombre,funcionario,dependencia) values ("Administrador de la dependencia",1,1);
-insert into Puestos(nombre,funcionario,dependencia) values ("Secretaria de la OCCB", 2,1);
-insert into Puestos(nombre,funcionario,dependencia) values ("Jefe de la OCCB", 3,1);
-insert into Puestos(nombre,funcionario,dependencia) values ("Registrador de bienes", 4,1);
-insert into Puestos(nombre,funcionario,dependencia) values ("Registrador de bienes", 9,1);
-insert into Puestos(nombre,funcionario,dependencia) values ("Registrador de bienes", 8,1);
-insert into Puestos(nombre,funcionario,dependencia) values ("Jefe de RRHH", 7,1 );
-insert into Puestos(nombre,funcionario,dependencia)  values ("Jefe de RRHH Y OCCB", 6,1);
 insert into Puestos(nombre,funcionario,dependencia)  values ("Profesor Arqui", 10,1 );
 insert into Puestos(nombre,funcionario,dependencia)  values ("Conserje", 8,1 );
 insert into Puestos(nombre,funcionario,dependencia)  values ("Profesor sistemas operativos", null,1 );
 insert into Puestos(nombre,funcionario,dependencia)  values ("Contador", null ,1 );
 insert into Puestos(nombre,funcionario,dependencia)  values ("Profesor de redes", null ,1 );
+insert into Puestos(nombre,funcionario,dependencia)  values ("Profesor soporte tecnico", null,1 );
+insert into Puestos(nombre,funcionario,dependencia)  values ("Conserje", null,1 );
+insert into Puestos(nombre,funcionario,dependencia)  values ("Analista de datos", null,1 );
+insert into Puestos(nombre,funcionario,dependencia)  values ("Investigador", null ,1 );
+insert into Puestos(nombre,funcionario,dependencia)  values ("Profesor programacion", null ,1 );
 
 
 insert into Usuarios(cuenta,password,rol,funcionario) values("admin_info","aaa",1,1);

@@ -22,6 +22,15 @@
             <li><a href="Funcionario/Funcionario_Crear">Añadir Funcionario</a></li>
             <li><a href="Departamento/Dependencias.jsp">Dependencias</a></li>
                 <%}%>
+                <%if (user.getRol() == Usuario.SECRETARIA_OCCB) {%>
+            <li><a href="Solicitud/Solicitud_listar"> Solicitudes </a></li>
+                <%}%>
+                <%if (user.getRol() == Usuario.JEFE_OCCB) {%>
+                <%}%>
+                <%if (user.getRol() == Usuario.REGISTRADOR_BIENES) {%>
+                <%}%>
+                <%if (user.getRol() == Usuario.JEFE_OCBB_RHH) {%>
+                <%}%>
                 <%}%>
         </ul>
         <%if (user != null) {%>

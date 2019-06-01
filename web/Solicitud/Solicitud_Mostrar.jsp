@@ -8,6 +8,17 @@
 <%@page import="Activos.Logic.Solicitud"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%Solicitud solicitud = (Solicitud) session.getAttribute("solicitud") == null ? new Solicitud() : (Solicitud) session.getAttribute("solicitud");%>
+<%String compra = "", donacion = "";%>
+<%switch (solicitud.getTipo()) {
+        case 1:
+            compra = "Selected";
+            break;
+        case 2:
+            donacion = "Selected";
+            break;
+        default:
+            break;
+    }%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -33,17 +44,6 @@
                         <input type="text" class="form-control" id="fecha" placeholder="2019/01/01" name="fecha" value="<%=solicitud.getFechaString()%>" disabled>
                     </div>
                     <div class="form-group">
-                        <%String compra = "", donacion = "";%>
-                        <%switch (solicitud.getTipo()) {
-                                case 1:
-                                    compra = "Selected";
-                                    break;
-                                case 2:
-                                    donacion = "Selected";
-                                    break;
-                                default:
-                                    break;
-                            }%>
                         <label for="Tipo_Comprobante">Tipo:</label>
                         <select class="form-control" id="tipo" name="tipo" disabled>
                             <option <%=compra.toString()%> value="1"> Compra </option>
@@ -51,34 +51,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <%String recibida = "", verificar = "", rechazada = "", rotulacion = "", procesada = "";%>
-                        <%switch (solicitud.getEstado()) {
-                                case 1:
-                                    recibida = "Selected";
-                                    break;
-                                case 2:
-                                    verificar = "Selected";
-                                    break;
-                                case 3:
-                                    rechazada = "Selected";
-                                    break;
-                                case 4:
-                                    rotulacion = "Selected";
-                                    break;
-                                case 5:
-                                    procesada = "Selected";
-                                    break;
-                                default:
-                                    break;
-                            }%>
                         <label for="Estado_Comprobante">Estado:</label>
-                        <select class="form-control" id="estado" name="estado" disabled>
-                            <option <%=recibida.toString()%> value="1"> Recibida </option>
-                            <option <%=verificar.toString()%> value="2"> Por Verificar </option>
-                            <option <%=rechazada.toString()%> value="3"> Rechazada </option>
-                            <option <%=rotulacion.toString()%> value="4"> Rotulacion </option>
-                            <option <%=procesada.toString()%> value="5"> Donacion </option>
-                        </select>
+                        <input type="text" class="form-control" id="estado" placeholder="Default" name="estado" value="<%=solicitud.getDescripcionEstado()%>" disabled>
                     </div>
                 </form>
             </center>

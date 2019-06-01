@@ -48,7 +48,7 @@ public class Controller_SolicitudListado extends HttpServlet {
     private void updateModel(HttpServletRequest request) {
         try {
             Usuario user = (Usuario) request.getSession().getAttribute("user");
-            modelsSolicitudListado.updateDependencia(user.getFuncionario().getID());
+            modelsSolicitudListado.updateDependencia(user.getFuncionario().getID(),user.getRol());
         } catch (Exception ex) {
         }
         request.setAttribute("dependencia", modelsSolicitudListado.getDependencia());

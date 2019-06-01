@@ -7,7 +7,11 @@ package Activos.Controllers;
 
 import Activos.Logic.Usuario;
 import static Activos.Logic.Usuario.ADMINISTRADOR_DEPENDENCIA;
+import static Activos.Logic.Usuario.JEFE_OCBB_RHH;
+import static Activos.Logic.Usuario.JEFE_OCCB;
 import static Activos.Logic.Usuario.JEFE_RRH;
+import static Activos.Logic.Usuario.REGISTRADOR_BIENES;
+import static Activos.Logic.Usuario.SECRETARIA_OCCB;
 import Activos.Models.Model_Login;
 import java.io.IOException;
 import java.util.HashMap;
@@ -149,8 +153,17 @@ public class Controller_Login extends HttpServlet {
             case ADMINISTRADOR_DEPENDENCIA:
                 request.getRequestDispatcher("/Solicitud/Solicitud_listar").forward(request, response);
                 break;
-                case JEFE_RRH:
+            case JEFE_RRH:
                 request.getRequestDispatcher("/Funcionario/Funcionario_listar").forward(request, response);
+                break;
+            case SECRETARIA_OCCB:
+                request.getRequestDispatcher("/Solicitud/Solicitud_listar").forward(request, response);
+                break;
+            case JEFE_OCCB:
+                break;
+            case REGISTRADOR_BIENES:
+                break;
+            case JEFE_OCBB_RHH:
                 break;
         }
     }

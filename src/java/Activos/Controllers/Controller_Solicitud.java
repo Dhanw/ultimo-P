@@ -222,13 +222,13 @@ public class Controller_Solicitud extends HttpServlet {
         String stringTipo = request.getParameter("tipo");
         int tipo = Integer.parseInt(stringTipo);
         sol.setTipo(tipo);
-        String stringEstado = request.getParameter("estado");
-        if (stringEstado != null) {
-            int estado = Integer.parseInt(stringEstado);
-            sol.setEstado(estado);
-        } else {
-            sol.setEstado(1);
-        }
+//        String stringEstado = request.getParameter("estado");
+//        if (stringEstado != null) {
+//            int estado = Integer.parseInt(stringEstado);
+//            sol.setEstado(estado);
+//        } else {
+//            sol.setEstado(Solicitud.RECIBIDA);
+//        }
     }
 
     private void guardarSolicitud(HttpServletRequest request, HttpServletResponse response) throws Exception {
