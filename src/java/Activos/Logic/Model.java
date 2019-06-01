@@ -57,7 +57,12 @@ public class Model {
     public Dependencia getDependencia_fromFuncionario(int id) throws SQLException, Exception {
         return dao.getDependencia_fromFuncionario(id);
     }
+    
+    public Dependencia getDependencia_fromFuncionario2(int id) throws SQLException, Exception {
+        return dao.getDependencia_fromFuncionarioV2(id);
+    }
 
+    
     public void addDependencia(Dependencia dependencia) throws Exception {
         dao.addDependencia(dependencia);
     }
