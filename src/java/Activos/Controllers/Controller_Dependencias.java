@@ -6,6 +6,7 @@
 package Activos.Controllers;
 
 import Activos.Logic.Dependencia;
+import Activos.Logic.Funcionario;
 import Activos.Models.Model_Departamento;
 import com.google.gson.Gson;
 import Activos.Models.Model_Login;
@@ -27,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Jose
  */
-@WebServlet(name = "Controller_Dependencias", urlPatterns = {"/CargarFuncionarios","/EliminarDependencia","/AgregarDependencia","/CargarDependencias","/BuscarDependencia","/EditarDependencia","/BuscarDependencia","/ActualizarDependencia"})
+@WebServlet(name = "Controller_Dependencias", urlPatterns = {"/Funcionario","/CargarFuncionarios","/EliminarDependencia","/AgregarDependencia","/CargarDependencias","/BuscarDependencia","/EditarDependencia","/BuscarDependencia","/ActualizarDependencia"})
 public class Controller_Dependencias extends HttpServlet {
     
 
@@ -67,6 +68,28 @@ public class Controller_Dependencias extends HttpServlet {
             case "/CargarFuncionarios":
                 this.doCargarFuncionarios(request, response);
                 break;
+            case "/Funcionario":
+                this.doCargarFuncionario(request, response);
+                break;
+        }
+    }
+    
+    
+    
+        public void doCargarFuncionario(HttpServletRequest request, HttpServletResponse response) throws IOException, Exception {
+        try{
+            BufferedReader aux = request.getReader();
+            Gson gson = new Gson();
+            String s = gson.fromJson(aux, String.class);
+            
+            int edad = Integer.parseInt(s);
+            
+            PrintWriter out = response.getWriter();
+           Funcionario dep= this.model.getFuncionario(edad);
+            out.write(gson.toJson(dep));        
+            response.setStatus(200); // ok with content
+        }catch(Exception e){
+            response.setStatus(401); //Bad request
         }
     }
     
