@@ -255,9 +255,9 @@ public class Dao {
     }
 
     public void addDependencia(Dependencia dependencia) throws Exception {
-        String sql = "insert into Dependencias(nombre,ubicacion,administrador) values('"+dependencia.getNombre() +"',"+dependencia.getUbicacion() +"',"+dependencia.getAdministrador().getID() +" )";
-
-//        sql = String.format(sql, dependencia.getNombre(), dependencia.getUbicacion(), dependencia.getAdministrador().getID());
+       String sql = "insert into Dependencias(nombre,ubicacion,administrador)"
+                + " values('%s','%s',%d)";
+        sql = String.format(sql, dependencia.getNombre(), dependencia.getUbicacion(), dependencia.getAdministrador().getID());
         int PK = db.executeUpdateWithKeys(sql);
         if (PK == 0) {
             throw new Exception("Ocurrio un error al tratar de agregar el Funcionario");
@@ -266,13 +266,11 @@ public class Dao {
         }
     }
      public void updateDependencia(Dependencia dependencia) throws Exception {
-        String sql="update dependencias set nombre='"+dependencia.getNombre()+"', ubicacion='"+dependencia.getUbicacion()+" where id='"+dependencia.getID()+"'";
+        String sql="update dependencias set nombre='"+dependencia.getNombre()+"', ubicacion='"+dependencia.getUbicacion()+"',administrador='"+dependencia.getAdministrador().getID() +"' where id="+dependencia.getID();
 //        sql = String.format(sql, dependencia.getNombre(), dependencia.getUbicacion(), dependencia.getAdministrador().getID());
-        int PK = db.executeUpdateWithKeys(sql);
+        int PK = db.executeUpdate(sql);
         if (PK == 0) {
             throw new Exception("Ocurrio un error al tratar de agregar el Funcionario");
-        } else {
-            dependencia.setID(PK);
         }
     }
     
