@@ -51,6 +51,10 @@ public class Model_Departamento {
         return this.domainModel.getDependencia(id);
     }   
         
+      public Funcionario getFuncionario(int id)throws Exception{
+        return this.domainModel.getFuncionario(id);
+    }   
+        
      public  List<Funcionario> listaFunc() throws Exception{
         List<Funcionario> result = new ArrayList();
         result=(List<Funcionario>) domainModel.getFuncionarios();
