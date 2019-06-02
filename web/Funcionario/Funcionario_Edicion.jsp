@@ -4,6 +4,7 @@
     Author     : jorac
 --%>
 
+
 <%@page import="Activos.Logic.Puesto"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.List"%>
@@ -17,10 +18,11 @@
         <%@ include file="/Head.jsp" %>
     </head>
     <body>
-        <%@ include file="/Header.jsp" %>
+       <%@ include file="/Header.jsp" %>
         <div class="container">
             <center>
                 <%
+                 
                     Usuario use = (Usuario) session.getAttribute("user");
                     List<Puesto> puestos = (List<Puesto>) request.getAttribute("puestos");
 

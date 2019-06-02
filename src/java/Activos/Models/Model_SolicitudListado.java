@@ -55,8 +55,8 @@ public class Model_SolicitudListado {
         return dependencia;
     }
 
-    public List<Solicitud> getSolicitudes() {
-        return solicitudes;
+    public List<Solicitud> getSolicitudes() throws Exception {
+        return domainModel.getSolicitudes();
     }
 
     public void updateDependencia(int id_funcionario, int rol) throws Exception {
@@ -90,5 +90,9 @@ public class Model_SolicitudListado {
 
     public List<Solicitud> solicitudesXEstado(String estado) throws Exception {
         return domainModel.SolitudesEstado(estado);
+    }
+    
+        public List<Solicitud> solicitudesEstado(int estado) throws Exception {
+        return domainModel.Solitudes_X_Estado(estado);
     }
 }

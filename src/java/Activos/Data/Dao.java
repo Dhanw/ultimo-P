@@ -5,6 +5,7 @@
  */
 package Activos.Data;
 
+import Activos.Logic.Activo;
 import Activos.Logic.Bien;
 import Activos.Logic.Categoria;
 import Activos.Logic.Dependencia;
@@ -454,7 +455,6 @@ public class Dao {
         while (rs.next()) {
             lista.add(this.getSolicitudH(rs));
         }
-
         return lista;
     }
 
@@ -680,7 +680,7 @@ public class Dao {
 
         String sql = "select * from Categoria";
         ResultSet rs = db.executeQuery(sql);
-        Funcionario func = null;
+        Categoria func = null;
         while (rs.next()) {
             categorias.add(this.getCategoriaH(rs));
         }
@@ -694,4 +694,164 @@ public class Dao {
         cat.setDescripcion(rs.getString("descripcion"));
         return cat;
     }
+    //--------------------------------------------------------------------------
+        public List<Solicitud> getSolicitud() throws SQLException, Exception {
+        List<Solicitud> solicitud = new ArrayList<>();
+
+        String sql = "select * from solicitudes";
+        ResultSet rs = db.executeQuery(sql);
+        Solicitud func = null;
+        while (rs.next()) {
+            solicitud.add(this.getSolicitudH(rs));
+        }
+
+        return solicitud;
+    }
+
+    public List<Bien> getBienes() throws SQLException, Exception {
+        List<Bien> bienes = new ArrayList<>();
+
+        String sql = "select* from bienes";
+        ResultSet rs = db.executeQuery(sql);
+        Bien func = null;
+        while (rs.next()) {
+            bienes.add(this.getBienH(rs));
+        }
+
+        return bienes;
+    }
+    public List<Puesto> getPuestos(Dependencia dep) throws SQLException, Exception {
+        List<Puesto> puestos = new ArrayList<>();
+        String sql = "select * from Puestos where dependencia = %d";
+        sql = String.format(sql, dep.getID());
+        ResultSet rs = db.executeQuery(sql);
+        Puesto puesto = null;
+        while (rs.next()) {
+            puesto = new Puesto();
+            puesto.setID(rs.getInt("ID"));
+            puesto.setNombre(rs.getString("nombre"));
+            int f = rs.getInt("funcionario");
+            puesto.setFuncionario(this.getFuncionario(f));
+            puesto.setDependencia(dep);
+            puestos.add(puesto);
+        }
+        return puestos;
+    }
+    public Dependencia getDependencia_fromFuncionarioV3(int id) throws SQLException, Exception {
+        Dependencia dependencia = null;
+        String sql = "select d.ID, d.nombre, d.ubicacion, d.administrador "
+                + "from dependencias d, usuarios u, funcionarios f, puestos p "
+                + "where u.funcionario = f.ID and d.ID = p.dependencia and f.ID = %d group by d.ID;";
+        sql = String.format(sql, id);
+        ResultSet rs = db.executeQuery(sql);
+        if (rs.next()) {
+            return getDependenciaH(rs);
+        } else {
+            return null;
+        }
+    }
+
+     public void addActivo(Activo activo) throws Exception {
+        String sql = "insert into Activos(codigo,descripcion,puesto,Categoria_ID)"
+                + " values('%s','%s',%d,%d)";
+
+        sql = String.format(sql, activo.getCodigo(), activo.getDescripcion(), activo.getPuesto().getID(), activo.getCategoria().getID());
+
+        int PK = db.executeUpdateWithKeys(sql);
+
+        if (PK == 0) {
+            throw new Exception("Ocurrio un error al tratar de agregar la descripcion");
+        } else {
+            activo.setID(PK);
+        }
+    }
+      private Activo getActivoH(ResultSet rs) throws SQLException, Exception {
+        Activo activo = new Activo();
+        try {
+            activo.setID(rs.getInt("ID"));
+            activo.setCodigo(rs.getString("codigo"));
+            activo.setDescripcion(rs.getString("descripcion"));
+            int cat = rs.getInt("Categoria_ID");
+            activo.setCategoria(this.getCategoria(cat));
+            int p = rs.getInt("puesto");
+            activo.setPuesto(this.getPuesto(p));
+        } catch (SQLException ex) {
+            return new Activo();
+        }
+        return activo;
+    }
+          public Activo getActivo(int id) throws SQLException, Exception {
+        Funcionario func = null;
+        String sql = "select * from Activos where ID = %d";
+        sql = String.format(sql, id);
+        ResultSet rs = db.executeQuery(sql);
+        if (rs.next()) {
+            return getActivoH(rs);
+        } else {
+            return new Activo();
+        }
+    }
+              public List<Activo> getActivosFromDependencia(int depe) throws Exception {
+        List<Activo> activos = new ArrayList<>();
+        String sql = "select a.ID, a.codigo, a.descripcion,a.puesto, a.Categoria_ID from Activos a, Puestos p where p.dependencia = %d group by a.ID;";
+        sql = String.format(sql, depe);
+        ResultSet rs = db.executeQuery(sql);
+        while (rs.next()) {
+            activos.add(this.getActivoH(rs));
+        }
+        return activos;
+    }
+
+    public List<Activo> getListaActivosPorCategoria(int id, String categoria) throws Exception {
+        List<Activo> activos = new ArrayList<>();
+        String sql = "select a.ID, a.codigo, a.descripcion, a.puesto, a.Categoria_ID from puestos p, dependencias d, Categoria c, Activos a where c.ID = a.Categoria_ID and p.dependencia = %d and c.descripcion = '%s' group by a.ID";
+        sql = String.format(sql, id, categoria);
+        ResultSet rs = db.executeQuery(sql);
+        while (rs.next()) {
+            activos.add(this.getActivoH(rs));
+        }
+        return activos;
+    }
+
+    public void eliminarActivo(int id) throws SQLException {
+        String sql = "delete from activos where id = %d";
+        sql = String.format(sql, id);
+        int count = db.executeUpdate(sql);
+        if (count == 0) {
+            throw new SQLException("No existe el activo");
+        }
+    }
+
+ 
+
+    public void updateDescripcionActivo(int id_activo, String descrp) throws SQLException {
+        String sql = "update activos set descripcion = '%s' where id = %d";
+        sql = String.format(sql, descrp, id_activo);
+        int count = db.executeUpdate(sql);
+        if (count == 0) {
+            throw new SQLException("No existe el activo");
+        }
+    }
+
+    public void updateCategoriaActivo(int id_activo, int cat_id) throws SQLException {
+        String sql = "update activos set Categoria_ID = %d where id = %d";
+        sql = String.format(sql, cat_id, id_activo);
+        int count = db.executeUpdate(sql);
+        if (count == 0) {
+            throw new SQLException("No existe el activo");
+        }
+    }
+
+    public void updatePuestoActivo(int id_activo, int p) throws SQLException {
+        String sql;
+        sql = "update activos set puesto = %d where id = %d";
+        sql = String.format(sql, p, id_activo);
+
+        int count = db.executeUpdate(sql);
+        if (count == 0) {
+            throw new SQLException("No existe el activo");
+        }
+    }
+
+
 }

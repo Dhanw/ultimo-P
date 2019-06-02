@@ -102,10 +102,14 @@ public class Model {
 
     }
 
+     public List<Solicitud> Solitudes_X_Estado(int estado) throws SQLException, Exception {
+        return dao.SolitudesEstado(estado);
+    }
+    
     public List<Solicitud> SolitudesEstado(String estado) throws SQLException, Exception {
 
         int estadoParseado = 0;
-        if ("recibida".equals(estado) || "Recibida".equals(estado) || "RECIBIDA".equals(estado)) {
+        if ("recibida" == estado || "Recibida".equals(estado) || "RECIBIDA".equals(estado)) {
             estadoParseado = 1;
         } else if ("verificar".equals(estado) || "Por verificar".equals(estado) || "por verificar".equals(estado)) {
             estadoParseado = 2;
@@ -217,8 +221,57 @@ public class Model {
         dao.deleteCategoria(dependencia);
     }
     
+    //-----------------------------------------------------
+    public List<Solicitud> getSolicitudes() throws SQLException, Exception {
+        return dao.getSolicitud();
+    }
     
+    //---------------------------------------------------------------------------
+    public List<Bien> getBienes() throws SQLException, Exception {
+        return dao.getBienes();
+    }
+//--------------------------------------------------------------------------------
+    public List<Puesto> getPuestos(Dependencia dep) throws Exception{
+        return dao.getPuestos(dep);
+    }
     
+    public Dependencia getDependencia_fromFuncionarioV3(int id) throws Exception{
+    return dao.getDependencia_fromFuncionarioV3(id);
+    }
+
+    public void addActivo(Activo p) throws Exception {
+        dao.addActivo(p);
+    }
     
 
+    public List<Activo> listarActivosPorDependencia(int depe) throws Exception {
+        return dao.getActivosFromDependencia(depe);
+    }
+
+    public List<Activo> listarActivosPorCategoria(int id, String categoria) throws Exception {
+        return dao.getListaActivosPorCategoria(id, categoria);
+    }
+
+    public void eliminarActivo(int id) throws SQLException {
+        dao.eliminarActivo(id);
+    }
+
+
+
+    public Activo getActivo(int ac) throws Exception {
+        return dao.getActivo(ac);
+    }
+
+
+    public void updateDescripcionActivo(int id_activo, String descrp) throws SQLException {
+        dao.updateDescripcionActivo(id_activo, descrp);
+    }
+
+    public void updateCategoriaActivo(int id_activo, int cat_id) throws SQLException {
+         dao.updateCategoriaActivo(id_activo, cat_id);
+    }
+
+    public void updatePuestoActivo(int id_activo, int p) throws SQLException {
+        dao.updatePuestoActivo(id_activo, p);
+    }
 }

@@ -324,7 +324,6 @@
             
             function myFunction( FuncionarioList) {
              var select = document.getElementById("mySelect"); 
-
               for(var i = 0; i < FuncionarioList.length; i++) {
                var el = document.createElement("option");
                el.textContent = FuncionarioList[i].ID +"-"+FuncionarioList[i].nombre ;
@@ -469,7 +468,7 @@
                                 $('#myModal').modal('hide')
                                 verDependencias();
                           }
-
+           
            
            
            function Eliminar(id) {

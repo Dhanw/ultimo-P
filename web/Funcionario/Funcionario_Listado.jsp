@@ -48,10 +48,12 @@
                     <div class="container">
                     <div class="input-group-btn row">
                         <div class="col-lg-3" name="filtro_funcionario">
-                            <form action="Funcionario/Filtro_Funcionario_Nombre" method="POST">
+                            <form  action="Funcionario/Filtro_Funcionario_Nombre" method="POST">
                                 <h4>Buscar por nombre completo</h4>
                                 <input name="nombre" type="text" class="form-control" placeholder="Nombre"  autocomplete="off">
-                                <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                      
+                                <a href="Funcionario/Funcionario_Crear"> <button style="margin-left: 30px" type="button" class="btn btn-primary">Agregar</button></a>
+                               
                             </form>
                         </div>
                     </div>
