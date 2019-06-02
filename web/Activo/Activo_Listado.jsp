@@ -16,6 +16,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Funcionarios listado</title>
         <script src="https://www.w3schools.com/lib/w3.js"></script>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/jsbarcode/3.6.0/JsBarcode.all.min.js"></script>
+        
         <%@ include file="/Head.jsp" %>
     </head>
     <body>
@@ -73,7 +77,9 @@
                         <th onclick="w3.sortHTML('#myTable', '.item', 'td:nth-child(3)')" style="cursor:pointer">Puesto</th>
                         <th onclick="w3.sortHTML('#myTable', '.item', 'td:nth-child(5)')" style="cursor:pointer">Encargado</th>
                         <th  style="cursor:pointer">Eliminar</th>
-                        <th  style="cursor:pointer">Editar</th
+                        <th  style="cursor:pointer">Editar</th>
+                        <th  style="cursor:pointer">codbarras</th>
+                        </tr>
 
                 </thead>
                 <tbody id="cuerpo">
@@ -103,19 +109,38 @@
                     <td>No asignado</td>
                     <% }%>
 
-
                     <td><a href="Activo/Activo_eliminar?ID=<%=a.getID()%>"><img width="30px" src="Images/delete.png"/></a></td>
                     <td><a href="Activo/Activo_Peditar?ID=<%=a.getID()%>"><img width="30px" src="Images/editar.png"/></a></td>
+                    <td><img src='Images/binoculars.png' onclick="Editar()"></td>
                 </tr>
 
                 <%}%>
                 </tbody>
             </table>
-
-
         </div>
+  <div class="w3-container">
+                <div id="id02" class="w3-modal">
+                    <div class="w3-modal-content">
+                        <div class="w3-container">
+                            <span onclick="document.getElementById('id02').style.display = 'none'" class="button display-topright">&times;</span>
+                            <div> <svg id="barcode"> </svg>  </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+                <script>
+               function Editar(id) { 
+                document.getElementById('id02').style.display = 'block';
+               var element = document.getElementById("barcode");
+               JsBarcode(element, "des5");
+            }
+                </script>
 
 
     </body>
+    
+    
+    
 </html>
 
