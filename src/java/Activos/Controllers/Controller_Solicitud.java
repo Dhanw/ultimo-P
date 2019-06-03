@@ -226,13 +226,6 @@ public class Controller_Solicitud extends HttpServlet {
         String stringTipo = request.getParameter("tipo");
         int tipo = Integer.parseInt(stringTipo);
         sol.setTipo(tipo);
-//        String stringEstado = request.getParameter("estado");
-//        if (stringEstado != null) {
-//            int estado = Integer.parseInt(stringEstado);
-//            sol.setEstado(estado);
-//        } else {
-//            sol.setEstado(Solicitud.RECIBIDA);
-//        }
     }
 
     private void guardarSolicitud(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -282,7 +275,7 @@ public class Controller_Solicitud extends HttpServlet {
                 request.getRequestDispatcher("/Solicitud/Solicitud_Editar.jsp").forward(request, response);
             }
             if (user.getRol() == Usuario.SECRETARIA_OCCB) {
-                if (solicitud.getEstado() != Solicitud.RECIBIDA && solicitud.getEstado() != Solicitud.POR_VERIFICAR && solicitud.getEstado() != Solicitud.RECHAZADA) {
+                if ((solicitud.getEstado() != Solicitud.RECIBIDA && solicitud.getEstado() != Solicitud.POR_VERIFICAR && solicitud.getEstado() != Solicitud.RECHAZADA) || solicitud.getRegistrador().getID() != 0) {
                     this.mostrarSolicitud(request, response);
                 }
                 request.getRequestDispatcher("/Solicitud/Solicitud_Aceptar_Rechazar.jsp").forward(request, response);

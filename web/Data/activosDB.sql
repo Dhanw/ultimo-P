@@ -18,9 +18,9 @@ CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
 USE `mydb` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`funcionarios`
+-- Table `mydb`.`Funcionarios`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`funcionarios` (
+CREATE TABLE IF NOT EXISTS `mydb`.`Funcionarios` (
   `ID` INT(5) NOT NULL AUTO_INCREMENT,
   `identificacion` VARCHAR(45) NOT NULL,
   `nombre` VARCHAR(45) NOT NULL,
@@ -31,9 +31,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`dependencias`
+-- Table `mydb`.`Dependencias`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`dependencias` (
+CREATE TABLE IF NOT EXISTS `mydb`.`Dependencias` (
   `ID` INT(5) NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
   `ubicacion` VARCHAR(45) NOT NULL,
@@ -42,15 +42,15 @@ CREATE TABLE IF NOT EXISTS `mydb`.`dependencias` (
   INDEX `fk_Dependencias_Funcionarios_idx` (`administrador` ASC) VISIBLE,
   CONSTRAINT `fk_Dependencias_Funcionarios`
     FOREIGN KEY (`administrador`)
-    REFERENCES `mydb`.`funcionarios` (`ID`))
+    REFERENCES `mydb`.`Funcionarios` (`ID`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`puestos`
+-- Table `mydb`.`Puestos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`puestos` (
+CREATE TABLE IF NOT EXISTS `mydb`.`Puestos` (
   `ID` INT(5) NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
   `funcionario` INT(5) NULL DEFAULT NULL,
@@ -60,10 +60,10 @@ CREATE TABLE IF NOT EXISTS `mydb`.`puestos` (
   INDEX `fk_Puestos_Funcionarios1_idx` (`funcionario` ASC) VISIBLE,
   CONSTRAINT `fk_Puestos_Dependencias1`
     FOREIGN KEY (`dependencia`)
-    REFERENCES `mydb`.`dependencias` (`ID`),
+    REFERENCES `mydb`.`Dependencias` (`ID`),
   CONSTRAINT `fk_Puestos_Funcionarios1`
     FOREIGN KEY (`funcionario`)
-    REFERENCES `mydb`.`funcionarios` (`ID`))
+    REFERENCES `mydb`.`Funcionarios` (`ID`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -79,9 +79,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`activos`
+-- Table `mydb`.`Activos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`activos` (
+CREATE TABLE IF NOT EXISTS `mydb`.`Activos` (
   `ID` INT(5) NOT NULL AUTO_INCREMENT,
   `codigo` VARCHAR(45) NOT NULL,
   `descripcion` VARCHAR(45) NOT NULL,
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`activos` (
   INDEX `fk_activos_Categoria1_idx` (`Categoria_ID` ASC) VISIBLE,
   CONSTRAINT `fk_Activos_Puestos1`
     FOREIGN KEY (`puesto`)
-    REFERENCES `mydb`.`puestos` (`ID`),
+    REFERENCES `mydb`.`Puestos` (`ID`),
   CONSTRAINT `fk_activos_Categoria1`
     FOREIGN KEY (`Categoria_ID`)
     REFERENCES `mydb`.`Categoria` (`ID`)
@@ -104,9 +104,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`solicitudes`
+-- Table `mydb`.`Solicitudes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`solicitudes` (
+CREATE TABLE IF NOT EXISTS `mydb`.`Solicitudes` (
   `ID` INT(5) NOT NULL AUTO_INCREMENT,
   `comprobante` VARCHAR(45) NOT NULL,
   `fecha` DATE NOT NULL,
@@ -114,6 +114,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`solicitudes` (
   `cantidad` INT(5) NULL DEFAULT NULL,
   `total` FLOAT NULL DEFAULT NULL,
   `estado` INT(2) NOT NULL,
+ `motivoRechazo` VARCHAR(256) NULL,
   `dependencia` INT(5) NOT NULL,
   `registrador` INT(5) NULL DEFAULT NULL,
   PRIMARY KEY (`ID`),
@@ -122,18 +123,18 @@ CREATE TABLE IF NOT EXISTS `mydb`.`solicitudes` (
   INDEX `fk_Solicitudes_Funcionarios1_idx` (`registrador` ASC) VISIBLE,
   CONSTRAINT `fk_Solicitudes_Dependencias1`
     FOREIGN KEY (`dependencia`)
-    REFERENCES `mydb`.`dependencias` (`ID`),
+    REFERENCES `mydb`.`Dependencias` (`ID`),
   CONSTRAINT `fk_Solicitudes_Funcionarios1`
     FOREIGN KEY (`registrador`)
-    REFERENCES `mydb`.`funcionarios` (`ID`))
+    REFERENCES `mydb`.`Funcionarios` (`ID`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`bienes`
+-- Table `mydb`.`Bienes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`bienes` (
+CREATE TABLE IF NOT EXISTS `mydb`.`Bienes` (
   `ID` INT(5) NOT NULL AUTO_INCREMENT,
   `marca` VARCHAR(45) NOT NULL,
   `modelo` VARCHAR(45) NOT NULL,
@@ -145,15 +146,15 @@ CREATE TABLE IF NOT EXISTS `mydb`.`bienes` (
   INDEX `fk_Bienes_Solicitudes1_idx` (`solicitud` ASC) VISIBLE,
   CONSTRAINT `fk_Bienes_Solicitudes1`
     FOREIGN KEY (`solicitud`)
-    REFERENCES `mydb`.`solicitudes` (`ID`))
+    REFERENCES `mydb`.`Solicitudes` (`ID`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`usuarios`
+-- Table `mydb`.`Usuarios`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`usuarios` (
+CREATE TABLE IF NOT EXISTS `mydb`.`Usuarios` (
   `ID` INT(5) NOT NULL AUTO_INCREMENT,
   `cuenta` VARCHAR(45) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
@@ -164,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`usuarios` (
   INDEX `fk_Usuarios_Funcionarios1_idx` (`funcionario` ASC) VISIBLE,
   CONSTRAINT `fk_Usuarios_Funcionarios1`
     FOREIGN KEY (`funcionario`)
-    REFERENCES `mydb`.`funcionarios` (`ID`))
+    REFERENCES `mydb`.`Funcionarios` (`ID`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -178,26 +179,26 @@ insert into Funcionarios(identificacion,nombre) values(634203014,"Bryan Ruiz");
 insert into Funcionarios(identificacion,nombre) values(421421412,"Jose Sanchez");
 insert into Funcionarios(identificacion,nombre) values(532523523,"Marta Quriroz");
 insert into Funcionarios(identificacion,nombre) values(532525276,"Oscar Ortega");
-insert into Funcionarios(identificacion,nombre) values(903690258,"Arelis Picado");
-insert into Funcionarios(identificacion,nombre) values(702580254,"Diego Babb");
-insert into Funcionarios(identificacion,nombre) values(908520147,"Enibeth Sanchez");
-insert into Funcionarios(identificacion,nombre) values(605820174,"Naomi Rojas");
+insert into Funcionarios(identificacion,nombre) values(421412423,"Felipe Ruiz");
 
 
 insert into Dependencias(nombre,ubicacion,administrador) values('Escuela de informatica','Lagunilla-Heredia',1);
 insert into Dependencias(nombre,ubicacion,administrador) values('Escuela de matematica','Heredia Centro',NULL);
 
 
+insert into Puestos(nombre,funcionario,dependencia) values ("Administrador de la dependencia",1,1);
+insert into Puestos(nombre,funcionario,dependencia) values ("Secretaria de la OCCB", 2,1);
+insert into Puestos(nombre,funcionario,dependencia) values ("Jefe de la OCCB", 3,1);
+insert into Puestos(nombre,funcionario,dependencia) values ("Registrador de bienes", 4,1);
+insert into Puestos(nombre,funcionario,dependencia) values ("Registrador de bienes", 9,1);
+insert into Puestos(nombre,funcionario,dependencia) values ("Registrador de bienes", 8,1);
+insert into Puestos(nombre,funcionario,dependencia) values ("Jefe de RRHH", 7,1 );
+insert into Puestos(nombre,funcionario,dependencia)  values ("Jefe de RRHH Y OCCB", 6,1);
 insert into Puestos(nombre,funcionario,dependencia)  values ("Profesor Arqui", 10,1 );
 insert into Puestos(nombre,funcionario,dependencia)  values ("Conserje", 8,1 );
 insert into Puestos(nombre,funcionario,dependencia)  values ("Profesor sistemas operativos", null,1 );
 insert into Puestos(nombre,funcionario,dependencia)  values ("Contador", null ,1 );
 insert into Puestos(nombre,funcionario,dependencia)  values ("Profesor de redes", null ,1 );
-insert into Puestos(nombre,funcionario,dependencia)  values ("Profesor soporte tecnico", null,1 );
-insert into Puestos(nombre,funcionario,dependencia)  values ("Conserje", null,1 );
-insert into Puestos(nombre,funcionario,dependencia)  values ("Analista de datos", null,1 );
-insert into Puestos(nombre,funcionario,dependencia)  values ("Investigador", null ,1 );
-insert into Puestos(nombre,funcionario,dependencia)  values ("Profesor programacion", null ,1 );
 
 
 insert into Usuarios(cuenta,password,rol,funcionario) values("admin_info","aaa",1,1);
@@ -209,20 +210,20 @@ insert into Usuarios(cuenta,password,rol,funcionario) values("registrador3","rrr
 insert into Usuarios(cuenta,password,rol,funcionario)  values("jefe_RRHH","ddd",5,7);
 insert into Usuarios(cuenta,password,rol,funcionario) values("jefe_OCCB_RRHH","ddd",7,8);
 
-insert into categoria(descripcion) values('Sillas');
-insert into categoria(descripcion) values('Mesas');
-insert into categoria(descripcion) values('Pizarras');
-insert into categoria(descripcion) values('Alfombras');
-insert into categoria(descripcion) values('Computadoras');
-insert into categoria(descripcion) values('Servidores');
-insert into categoria(descripcion) values('Discos duros');
-insert into categoria(descripcion) values('Memorias');
-insert into categoria(descripcion) values('Procesadores');
+insert into Categoria(descripcion) values('Sillas');
+insert into Categoria(descripcion) values('Mesas');
+insert into Categoria(descripcion) values('Pizarras');
+insert into Categoria(descripcion) values('Alfombras');
+insert into Categoria(descripcion) values('Computadoras');
+insert into Categoria(descripcion) values('Servidores');
+insert into Categoria(descripcion) values('Discos duros');
+insert into Categoria(descripcion) values('Memorias');
+insert into Categoria(descripcion) values('Procesadores');
 
-insert into activos(codigo,descripcion,puesto,Categoria_ID) values("A1","Silla para lab de informatica", 7, 1);
-insert into activos(codigo,descripcion,puesto,Categoria_ID) values("A2","Mesa para lab de informatica", 7, 2);
-insert into activos(codigo,descripcion,puesto,Categoria_ID) values("A3","Pizzarra para redes", 8, 3);
-insert into activos(codigo,descripcion,puesto,Categoria_ID) values("A4","Computadora para lab de progra", 6, 5);
+insert into Activos(codigo,descripcion,puesto,Categoria_ID) values("A1","Silla para lab de informatica", 7, 1);
+insert into Activos(codigo,descripcion,puesto,Categoria_ID) values("A2","Mesa para lab de informatica", 7, 2);
+insert into Activos(codigo,descripcion,puesto,Categoria_ID) values("A3","Pizzarra para redes", 8, 3);
+insert into Activos(codigo,descripcion,puesto,Categoria_ID) values("A4","Computadora para lab de progra", 6, 5);
 
 
 

@@ -16,6 +16,7 @@ import java.util.List;
  * @author jorac
  */
 public class Solicitud {
+
     //Tipos de solicitudes
     public static final int COMPRA = 1;
     public static final int DONACION = 2;

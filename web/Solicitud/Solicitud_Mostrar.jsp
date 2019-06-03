@@ -26,6 +26,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Solicitudes Mostrar</title>
         <%@ include file="/Head.jsp" %>
+        <script src="Javascript/jquery-3.4.1.js" type="text/javascript"></script>
     </head>
     <body>
         <%@ include file="/Header.jsp" %>

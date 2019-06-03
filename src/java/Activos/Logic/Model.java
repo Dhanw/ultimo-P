@@ -6,9 +6,7 @@
 package Activos.Logic;
 
 import Activos.Data.Dao;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,11 +34,12 @@ public class Model {
         return dao.getUsuario(cuenta, pass);
     }
 
+    public List<Usuario> getUsuarios() throws Exception {
+        return dao.getUsuarios();
+    }
+
     public void addUsuario(Usuario usuario) throws Exception {
         dao.addUsuario(usuario);
-    }
-        public List<Usuario> getUsuarios() throws Exception {
-        return dao.getUsuarios();
     }
 
     public Funcionario getFuncionario(int id) throws SQLException, Exception {
@@ -105,10 +104,10 @@ public class Model {
 
     }
 
-     public List<Solicitud> Solitudes_X_Estado(int estado) throws SQLException, Exception {
+    public List<Solicitud> Solitudes_X_Estado(int estado) throws SQLException, Exception {
         return dao.SolitudesEstado(estado);
     }
-    
+
     public List<Solicitud> SolitudesEstado(String estado) throws SQLException, Exception {
 
         int estadoParseado = 0;
@@ -199,53 +198,55 @@ public class Model {
     public List<Dependencia> getDependencias() throws SQLException, Exception {
         return dao.getDependencias();
     }
+
     public boolean isUsuario(int id) throws SQLException {
         return dao.isUsuario(id);
     }
+
     //--------------------------------------------------------------------METODOS DE CATEGORIA
-        public void addCategoria(Categoria cat) throws Exception {
+    public void addCategoria(Categoria cat) throws Exception {
         dao.addCategoria(cat);
     }
 
     public Categoria getCategoria(int id) throws SQLException {
         return dao.getCategoria(id);
-    
+
     }
 
     public List<Categoria> getCategorias() throws SQLException {
         return dao.getCategorias();
     }
 
-        public void updateCategoria(Categoria dependencia) throws Exception {
+    public void updateCategoria(Categoria dependencia) throws Exception {
         dao.updateCategoria(dependencia);
     }
 
     public void eliminarCategoria(int dependencia) throws Exception {
         dao.deleteCategoria(dependencia);
     }
-    
+
     //-----------------------------------------------------
     public List<Solicitud> getSolicitudes() throws SQLException, Exception {
         return dao.getSolicitud();
     }
-    
+
     //---------------------------------------------------------------------------
     public List<Bien> getBienes() throws SQLException, Exception {
         return dao.getBienes();
     }
 //--------------------------------------------------------------------------------
-    public List<Puesto> getPuestos(Dependencia dep) throws Exception{
+
+    public List<Puesto> getPuestos(Dependencia dep) throws Exception {
         return dao.getPuestos(dep);
     }
-    
-    public Dependencia getDependencia_fromFuncionarioV3(int id) throws Exception{
-    return dao.getDependencia_fromFuncionarioV3(id);
+
+    public Dependencia getDependencia_fromFuncionarioV3(int id) throws Exception {
+        return dao.getDependencia_fromFuncionarioV3(id);
     }
 
     public void addActivo(Activo p) throws Exception {
         dao.addActivo(p);
     }
-    
 
     public List<Activo> listarActivosPorDependencia(int depe) throws Exception {
         return dao.getActivosFromDependencia(depe);
@@ -259,19 +260,16 @@ public class Model {
         dao.eliminarActivo(id);
     }
 
-
-
     public Activo getActivo(int ac) throws Exception {
         return dao.getActivo(ac);
     }
-
 
     public void updateDescripcionActivo(int id_activo, String descrp) throws SQLException {
         dao.updateDescripcionActivo(id_activo, descrp);
     }
 
     public void updateCategoriaActivo(int id_activo, int cat_id) throws SQLException {
-         dao.updateCategoriaActivo(id_activo, cat_id);
+        dao.updateCategoriaActivo(id_activo, cat_id);
     }
 
     public void updatePuestoActivo(int id_activo, int p) throws SQLException {

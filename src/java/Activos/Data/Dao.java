@@ -87,6 +87,7 @@ public class Dao {
             int setfun2 = rs.getInt("registrador");
             solicitud.setRegistrador(this.getFuncionario(setfun2));
             solicitud.setBienes(this.getBienes(solicitud));
+            solicitud.setMotivoRechazo(rs.getString("motivoRechazo") == null ? "" : rs.getString("motivoRechazo"));
             return solicitud;
         } catch (SQLException ex) {
             return new Solicitud();
@@ -188,6 +189,17 @@ public class Dao {
             return new Usuario();
         }
     }
+    
+    public List<Usuario> getUsuarios() throws SQLException, Exception {
+        String sql = "select * from Usuarios";
+        sql = String.format(sql);
+        ResultSet rs = db.executeQuery(sql);
+        List<Usuario> usuarios = new ArrayList();
+        while (rs.next()) {
+            usuarios.add(getUsuarioH(rs));
+        }
+        return usuarios;
+    }
 
     public void addUsuario(Usuario usuario) throws Exception {
         String sql = "insert into Usuarios(cuenta, password, rol, funcionario)"
@@ -202,16 +214,6 @@ public class Dao {
             usuario.setID(PK);
         }
 
-    }
-        public List<Usuario> getUsuarios() throws SQLException, Exception {
-        String sql = "select * from Usuarios";
-        sql = String.format(sql);
-        ResultSet rs = db.executeQuery(sql);
-        List<Usuario> usuarios = new ArrayList();
-        while (rs.next()) {
-            usuarios.add(getUsuarioH(rs));
-        }
-        return usuarios;
     }
 
 // Dependencia ------------------------------------------------------------------------------
@@ -262,7 +264,7 @@ public class Dao {
         if (rs.next()) {
             return getDependenciaH(rs);
         } else {
-            return null;
+            return new Dependencia();
         }
     }
 
@@ -394,7 +396,15 @@ public class Dao {
 
     public void updateSolicitud(Solicitud solicitud) throws Exception {
         String sql;
-        if (solicitud.getRegistrador().getID() != 0) {
+        if (solicitud.getRegistrador().getID() == -1) {
+            sql = "update Solicitudes"
+                    + " set comprobante = '%s',fecha = '%s',tipo = %d,"
+                    + "cantidad = %d,total = %f,estado = %d,dependencia = %d,registrador = null"
+                    + " where ID = %d";
+            sql = String.format(sql, solicitud.getComprobante(), solicitud.getFecha(), solicitud.getTipo(),
+                    solicitud.getCantidad(), solicitud.getTotal(), solicitud.getEstado(), solicitud.getDependencia().getID(),
+                    solicitud.getID());
+        } else if (solicitud.getRegistrador().getID() != 0) {
             sql = "update Solicitudes"
                     + " set comprobante = '%s',fecha = '%s',tipo = %d,"
                     + "cantidad = %d,total = %f,estado = %d,dependencia = %d,registrador = %d"
@@ -403,13 +413,27 @@ public class Dao {
                     solicitud.getCantidad(), solicitud.getTotal(), solicitud.getEstado(), solicitud.getDependencia().getID(),
                     solicitud.getRegistrador().getID(), solicitud.getID());
         } else {
-            sql = "update Solicitudes"
-                    + " set comprobante = '%s',fecha = '%s',tipo = %d,"
-                    + "cantidad = %d,total = %f,estado = %d,dependencia = %d"
-                    + " where ID = %d";
-            sql = String.format(sql, solicitud.getComprobante(), solicitud.getFecha(), solicitud.getTipo(),
-                    solicitud.getCantidad(), solicitud.getTotal(), solicitud.getEstado(), solicitud.getDependencia().getID(),
-                    solicitud.getID());
+            if (solicitud.getEstado() != 1) {
+                if (!solicitud.getMotivoRechazo().isEmpty()) {
+                    sql = "update Solicitudes"
+                            + " set motivoRechazo = '%s', estado= %d"
+                            + " where ID = %d";
+                    sql = String.format(sql, solicitud.getMotivoRechazo(), solicitud.getEstado(), solicitud.getID());
+                } else {
+                    sql = "update Solicitudes"
+                            + " set estado= %d"
+                            + " where ID = %d";
+                    sql = String.format(sql, solicitud.getEstado(), solicitud.getID());
+                }
+            } else {
+                sql = "update Solicitudes"
+                        + " set comprobante = '%s',fecha = '%s',tipo = %d,"
+                        + "cantidad = %d,total = %f,estado = %d,dependencia = %d"
+                        + " where ID = %d";
+                sql = String.format(sql, solicitud.getComprobante(), solicitud.getFecha(), solicitud.getTipo(),
+                        solicitud.getCantidad(), solicitud.getTotal(), solicitud.getEstado(), solicitud.getDependencia().getID(),
+                        solicitud.getID());
+            }
         }
         int PK = db.executeUpdate(sql);
         if (PK == 0) {
@@ -633,7 +657,7 @@ public class Dao {
     }
 
     public boolean isUsuario(int id) throws SQLException {
-        String sql = "select u.ID from usuarios u,funcionarios f where u.funcionario = f.ID and f.ID = %d";
+        String sql = "select u.ID from Usuarios u,Funcionarios f where u.funcionario = f.ID and f.ID = %d";
         sql = String.format(sql, id);
         ResultSet rs = db.executeQuery(sql);
         return rs.next();
@@ -708,7 +732,7 @@ public class Dao {
         public List<Solicitud> getSolicitud() throws SQLException, Exception {
         List<Solicitud> solicitud = new ArrayList<>();
 
-        String sql = "select * from solicitudes";
+        String sql = "select * from Solicitudes";
         ResultSet rs = db.executeQuery(sql);
         Solicitud func = null;
         while (rs.next()) {
@@ -721,7 +745,7 @@ public class Dao {
     public List<Bien> getBienes() throws SQLException, Exception {
         List<Bien> bienes = new ArrayList<>();
 
-        String sql = "select* from bienes";
+        String sql = "select* from Bienes";
         ResultSet rs = db.executeQuery(sql);
         Bien func = null;
         while (rs.next()) {
@@ -750,7 +774,7 @@ public class Dao {
     public Dependencia getDependencia_fromFuncionarioV3(int id) throws SQLException, Exception {
         Dependencia dependencia = null;
         String sql = "select d.ID, d.nombre, d.ubicacion, d.administrador "
-                + "from dependencias d, usuarios u, funcionarios f, puestos p "
+                + "from Dependencias d, Usuarios u, Funcionarios f, Puestos p "
                 + "where u.funcionario = f.ID and d.ID = p.dependencia and f.ID = %d group by d.ID;";
         sql = String.format(sql, id);
         ResultSet rs = db.executeQuery(sql);
@@ -814,7 +838,7 @@ public class Dao {
 
     public List<Activo> getListaActivosPorCategoria(int id, String categoria) throws Exception {
         List<Activo> activos = new ArrayList<>();
-        String sql = "select a.ID, a.codigo, a.descripcion, a.puesto, a.Categoria_ID from puestos p, dependencias d, Categoria c, Activos a where c.ID = a.Categoria_ID and p.dependencia = %d and c.descripcion = '%s' group by a.ID";
+        String sql = "select a.ID, a.codigo, a.descripcion, a.puesto, a.Categoria_ID from Puestos p, Dependencias d, Categoria c, Activos a where c.ID = a.Categoria_ID and p.dependencia = %d and c.descripcion = '%s' group by a.ID";
         sql = String.format(sql, id, categoria);
         ResultSet rs = db.executeQuery(sql);
         while (rs.next()) {
@@ -824,7 +848,7 @@ public class Dao {
     }
 
     public void eliminarActivo(int id) throws SQLException {
-        String sql = "delete from activos where id = %d";
+        String sql = "delete from Activos where id = %d";
         sql = String.format(sql, id);
         int count = db.executeUpdate(sql);
         if (count == 0) {
@@ -835,7 +859,7 @@ public class Dao {
  
 
     public void updateDescripcionActivo(int id_activo, String descrp) throws SQLException {
-        String sql = "update activos set descripcion = '%s' where id = %d";
+        String sql = "update Activos set descripcion = '%s' where id = %d";
         sql = String.format(sql, descrp, id_activo);
         int count = db.executeUpdate(sql);
         if (count == 0) {
@@ -844,7 +868,7 @@ public class Dao {
     }
 
     public void updateCategoriaActivo(int id_activo, int cat_id) throws SQLException {
-        String sql = "update activos set Categoria_ID = %d where id = %d";
+        String sql = "update Activos set Categoria_ID = %d where id = %d";
         sql = String.format(sql, cat_id, id_activo);
         int count = db.executeUpdate(sql);
         if (count == 0) {
@@ -854,7 +878,7 @@ public class Dao {
 
     public void updatePuestoActivo(int id_activo, int p) throws SQLException {
         String sql;
-        sql = "update activos set puesto = %d where id = %d";
+        sql = "update Activos set puesto = %d where id = %d";
         sql = String.format(sql, p, id_activo);
 
         int count = db.executeUpdate(sql);
