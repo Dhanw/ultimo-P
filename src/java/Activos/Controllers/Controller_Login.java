@@ -160,9 +160,10 @@ public class Controller_Login extends HttpServlet {
                 request.getRequestDispatcher("/Solicitud/Solicitud_listar").forward(request, response);
                 break;
             case JEFE_OCCB:
-                 request.getRequestDispatcher("/Solicitud/Solicitud_listar").forward(request, response);
+                request.getRequestDispatcher("/Solicitud/Solicitud_listar").forward(request, response);
                 break;
             case REGISTRADOR_BIENES:
+                request.getRequestDispatcher("/Registrador/RegistrarBien.jsp").forward(request, response);
                 break;
             case JEFE_OCBB_RHH:
                 break;

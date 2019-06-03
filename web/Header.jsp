@@ -15,26 +15,25 @@
                 <%if (user != null) {%>
                 <%if (user.getRol() == Usuario.ADMINISTRADOR_DEPENDENCIA) {%>
             <li><a href="Solicitud/Solicitud_listar"> Solicitudes </a></li>
+
+            <%}%>
+            <%if (user.getRol() == Usuario.JEFE_RRH) {%>
+            <li><a href="Funcionario/Funcionario_listar">Funcionarios</a></li>
             <li><a href="Departamento/Dependencias.jsp">Dependencias</a></li>
-            <li><a href="Bienes/Bienes.jsp">Categoria</a></li>
-            <li><a href="Registrador/RegistrarBien.jsp">Registrar bien</a></li>
-            <li><a href="Activos/Prepare_Listado">Activos</a></li>
-                <%}%>
-                <%if (user.getRol() == Usuario.JEFE_RRH) {%>
-            <li><a href="Funcionario/Funcionario_listar">Listado</a></li>
-            <li><a href="Funcionario/Funcionario_Crear">Funcionario</a></li>
-            <li><a href="Departamento/Dependencias.jsp">Dependencias</a></li>
-            <li><a href="Bienes/Bienes.jsp">Categoria</a></li>
+            <li><a href="Bienes/Bienes.jsp">Categorias</a></li>
             <li><a href="Activos/Prepare_Listado">Activos</a></li>
                 <%}%>
                 <%if (user.getRol() == Usuario.SECRETARIA_OCCB) {%>
             <li><a href="Solicitud/Solicitud_listar"> Solicitudes </a></li>
-            <li><a href="Bienes/Bienes.jsp">Bienes</a></li>
                 <%}%>
                 <%if (user.getRol() == Usuario.JEFE_OCCB) {%>
             <li><a href="Solicitud/Solicitud_listar"> Solicitudes </a></li>
+            <li><a href="Activos/Prepare_Listado">Activos</a></li>
                 <%}%>
                 <%if (user.getRol() == Usuario.REGISTRADOR_BIENES) {%>
+            <li><a href="Registrador/RegistrarBien.jsp">Registrar bien</a></li>
+            <li><a href="Bienes/Bienes.jsp">Bienes</a></li>
+            <li><a href="Bienes/Bienes.jsp">Categoria</a></li>
                 <%}%>
                 <%if (user.getRol() == Usuario.JEFE_OCBB_RHH) {%>
                 <%}%>
