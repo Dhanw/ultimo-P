@@ -4,6 +4,11 @@
     Author     : wizard
 --%>
 
+<%@page import="static Activos.Logic.Usuario.ADMINISTRADOR_DEPENDENCIA"%>
+<%@page import="static Activos.Logic.Usuario.JEFE_OCCB"%>
+<%@page import="static Activos.Logic.Usuario.JEFE_RRH"%>
+<%@page import="static Activos.Logic.Usuario.REGISTRADOR_BIENES"%>
+<%@page import="static Activos.Logic.Usuario.SECRETARIA_OCCB"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="Activos.Logic.Funcionario"%>
@@ -25,6 +30,26 @@
             break;
     }%>
 <%List<Funcionario> registradores = (List<Funcionario>) request.getAttribute("registradores") == null ? new ArrayList() : (List<Funcionario>) request.getAttribute("registradores");%>
+<% Usuario predeterminado = (Usuario) session.getAttribute("user");%>
+<%if (predeterminado == null) {
+        request.getRequestDispatcher("/UserLogin/PrepareLogin").forward(request, response);
+    }%>
+<% switch (predeterminado.getRol()) {
+        case ADMINISTRADOR_DEPENDENCIA:
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            break;
+        case JEFE_RRH:
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            break;
+        case SECRETARIA_OCCB:
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            break;
+        case JEFE_OCCB:
+            break;
+        case REGISTRADOR_BIENES:
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            break;
+    }%>
 <!DOCTYPE html>
 <html>
     <head>

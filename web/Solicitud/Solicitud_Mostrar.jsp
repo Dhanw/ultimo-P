@@ -4,6 +4,11 @@
     Author     : Jose
 --%>
 
+<%@page import="static Activos.Logic.Usuario.ADMINISTRADOR_DEPENDENCIA"%>
+<%@page import="static Activos.Logic.Usuario.JEFE_OCCB"%>
+<%@page import="static Activos.Logic.Usuario.JEFE_RRH"%>
+<%@page import="static Activos.Logic.Usuario.REGISTRADOR_BIENES"%>
+<%@page import="static Activos.Logic.Usuario.SECRETARIA_OCCB"%>
 <%@page import="Activos.Logic.Funcionario"%>
 <%@page import="Activos.Logic.Bien"%>
 <%@page import="Activos.Logic.Solicitud"%>
@@ -18,6 +23,24 @@
             donacion = "Selected";
             break;
         default:
+            break;
+    }%>
+<% Usuario predeterminado = (Usuario) session.getAttribute("user");%>
+<%if (predeterminado == null) {
+        request.getRequestDispatcher("/UserLogin/PrepareLogin").forward(request, response);
+    }%>
+<% switch (predeterminado.getRol()) {
+        case ADMINISTRADOR_DEPENDENCIA:
+            break;
+        case JEFE_RRH:
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            break;
+        case SECRETARIA_OCCB:
+            break;
+        case JEFE_OCCB:
+            break;
+        case REGISTRADOR_BIENES:
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
             break;
     }%>
 <!DOCTYPE html>
