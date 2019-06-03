@@ -132,8 +132,8 @@
                 <script>
                function Editar(id) { 
                 document.getElementById('id02').style.display = 'block';
-               var element = document.getElementById("barcode");
-               JsBarcode(element, "des5");
+                var element = document.getElementById("barcode");
+                JsBarcode(element, "des5");
             }
                 </script>
 

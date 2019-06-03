@@ -8,3 +8,4 @@
 <base href="http://localhost:8080/Gestor_Activos/">
 <link rel="stylesheet" href="CSS/Complement.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">

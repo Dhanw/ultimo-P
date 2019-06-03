@@ -39,6 +39,9 @@ public class Model {
     public void addUsuario(Usuario usuario) throws Exception {
         dao.addUsuario(usuario);
     }
+        public List<Usuario> getUsuarios() throws Exception {
+        return dao.getUsuarios();
+    }
 
     public Funcionario getFuncionario(int id) throws SQLException, Exception {
         return dao.getFuncionario(id);

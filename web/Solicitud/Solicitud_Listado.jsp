@@ -57,6 +57,7 @@
                 </div>
             </div>
             <br>
+            <%if (user.getRol() == Usuario.ADMINISTRADOR_DEPENDENCIA) {%>
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -89,11 +90,46 @@
                     <%}%>
                 </tbody>
             </table>
+            <%}%>
+            <%if (user.getRol() == Usuario.SECRETARIA_OCCB || user.getRol() == Usuario.JEFE_OCCB) {%>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Comprobante</th>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                        <th>Precio</th>
+                        <th>Mostrar</th>
+                        <th>Editar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%
+                        for (Solicitud sol : solicitudes) {
+                    %>
+                    <tr>
+                        <td><%=sol.getComprobante()%></td>
+                        <td><%=sol.getFechaString()%></td>
+                        <td><%=sol.getDescripcionTipo()%></td>
+                        <td><%=sol.getDescripcionEstado()%></td>
+                        <td><%=sol.getCantidad()%></td>
+                        <td><%=sol.getTotal()%></td>
+                        <td> &nbsp;&nbsp; <a href="Solicitud/Solicitud_mostrar?ID=<%=sol.getID()%>"><img width=30px" src="Images/binoculars.png"/></a></td>
+                        <td>&nbsp;<a href="Solicitud/Solicitud_editar?ID=<%=sol.getID()%>"><img width=30px" src="Images/editar.png"/></a></td>
+                    </tr>
+                    <%}%>
+                </tbody>
+            </table>
+            <%}%>
+            <%if (user.getRol() == Usuario.ADMINISTRADOR_DEPENDENCIA) {%>
             <center>
                 <form action="Solicitud/Solicitud_crear">
                     <button type="submit" class="btn btn-primary"> Agregar </button>
                 </form>
             </center>
+            <%}%>
         </div>
     </body>
 </html>

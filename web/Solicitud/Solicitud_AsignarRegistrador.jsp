@@ -1,10 +1,14 @@
 <%-- 
-    Document   : Solicitud_Mostrar
-    Created on : Mar 27, 2019, 4:56:28 PM
-    Author     : Jose
+    Document   : Solicitud_Agregar
+    Created on : 19/05/2019, 04:27:22 PM
+    Author     : wizard
 --%>
 
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
 <%@page import="Activos.Logic.Funcionario"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="Activos.Logic.Bien"%>
 <%@page import="Activos.Logic.Solicitud"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -20,11 +24,12 @@
         default:
             break;
     }%>
+<%List<Funcionario> registradores = (List<Funcionario>) request.getAttribute("registradores") == null ? new ArrayList() : (List<Funcionario>) request.getAttribute("registradores");%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Solicitudes Mostrar</title>
+        <title>Solicitudes Edicion</title>
         <%@ include file="/Head.jsp" %>
     </head>
     <body>
@@ -58,21 +63,25 @@
                 </form>
             </center>
             <br>
-            <%if (user.getRol() == Usuario.JEFE_OCCB || user.getRol() == Usuario.SECRETARIA_OCCB) {%>
             <center>
-                <form class="form-inline" action="#">
+                <form class="form-inline" action="Solicitud/asignarRegistrador">
                     <div class="form-group">
                         <label for="Registrador">Registrador:</label>
-                        <select class="form-control" id="registrador" name="registrador" disabled>
-                            <%if (solicitud.getRegistrador().getID() != 0) {%>
-                            <option selected value="<%=solicitud.getRegistrador().getID()%>"> <%=solicitud.getRegistrador().getNombre()%> </option>
-                            <%}%>
+                        <select class="form-control" id="registrador" name="registrador">
                             <option value="0"> Sin Asignar </option>
+                            <%for (Funcionario f : registradores) {%>
+                            <%if (solicitud.getRegistrador().getID() == f.getID()) {%>
+                            <option selected value="<%=f.getID()%>"> <%=f.getNombre()%> </option>
+                            <%} else {%>
+                            <option value="<%=f.getID()%>"> <%=f.getNombre()%> </option>
+                            <%}%>
+                            <%}%>
                         </select>
                     </div>
+                    <button type="submit" class="btn btn-success"> Asignar </button>
                 </form> 
             </center>
-            <%}%>
+            <br>
             <center>
                 <h4>Lista de Articulos</h4>
             </center>
@@ -88,8 +97,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <%for (Bien b
-                                : solicitud.getBienes()) {%>
+                    <%for (Bien b : solicitud.getBienes()) {%>
                     <tr>
                         <td><%=b.getDescripcion()%></td>
                         <td><%=b.getMarca()%></td>
@@ -100,38 +108,6 @@
                     <%}%>
                 </tbody>
             </table>
-            <form class="form-horizontal" action="#">
-                <center>
-                    <div class="form-group"id="motivoRechazo">
-                        <label for="motivoRechazo"> Motivo de rechazo: </label>
-                        <textarea class="form-control" rows="3" id="motivo" value="<%=solicitud.getMotivoRechazo()%>" disabled></textarea>
-                        <br><br>
-                    </div>
-                </center>
-            </form>
-            <center>
-                <a href="Solicitud/Solicitud_listar"><button class="btn btn-primary"> Regresar </button></a>
-            </center>
         </div>
-        <script>
-            function pageLoad(event) {
-                HideTextArea();
-                if (tieneMotivo()) {
-                    ShowTextArea();
-                }
-            }
-            function ShowTextArea() {
-                $("#motivoRechazo").show();
-            }
-            function HideTextArea() {
-                $("#motivoRechazo").hide();
-            }
-            function tieneMotivo() {
-                var motivo = $("#motivo").val();
-                console.log(motivo);
-                return $("#motivo").val().length != 0;
-            }
-            $(pageLoad);
-        </script>
     </body>
 </html>

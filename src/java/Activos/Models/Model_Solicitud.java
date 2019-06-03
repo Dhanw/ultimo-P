@@ -10,6 +10,9 @@ import Activos.Logic.Dependencia;
 import Activos.Logic.Funcionario;
 import Activos.Logic.Model;
 import Activos.Logic.Solicitud;
+import Activos.Logic.Usuario;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,6 +27,7 @@ public class Model_Solicitud {
     private Solicitud modelMostrar;
     private Bien bien;
     private int ContadorBienes;
+    private Funcionario registrador;
 
     public Model_Solicitud() {
         this.domainModel = Model.instance();
@@ -33,15 +37,17 @@ public class Model_Solicitud {
         this.bien = new Bien();
         this.bien.setSolicitud(modelAgregar);
         this.ContadorBienes = 0;
+        this.registrador = new Funcionario();
     }
 
-    public Model_Solicitud(Model domainModel, Solicitud agregar, Solicitud editar, Solicitud mostrar, Bien bien, int ContadorBienes) {
+    public Model_Solicitud(Model domainModel, Solicitud agregar, Solicitud editar, Solicitud mostrar, Bien bien, int ContadorBienes, Funcionario registrador) {
         this.domainModel = domainModel;
         this.modelAgregar = agregar;
         this.modelEditar = editar;
         this.modelMostrar = mostrar;
         this.bien = bien;
         this.ContadorBienes = ContadorBienes;
+        this.registrador = registrador;
     }
 
     public void setDomainModel(Model domainModel) {
@@ -68,6 +74,10 @@ public class Model_Solicitud {
         this.ContadorBienes = ContadorBienes;
     }
 
+    public void setRegistrador(Funcionario registrador) {
+        this.registrador = registrador;
+    }
+
     public Model getDomainModel() {
         return domainModel;
     }
@@ -90,6 +100,10 @@ public class Model_Solicitud {
 
     public int getContadorBienes() {
         return ContadorBienes;
+    }
+
+    public Funcionario getRegistrador() {
+        return registrador;
     }
 
     public void agregarBien(Bien b, Solicitud s) {
@@ -142,8 +156,51 @@ public class Model_Solicitud {
         }
     }
 
+    public void eliminarSolicitud(int id_solicitud) throws SQLException {
+        domainModel.eliminarSolicitud(id_solicitud);
+    }
+
     public Solicitud getSolicitud(int id_solicitud) throws Exception {
         return domainModel.getSolicitud(id_solicitud);
+    }
+
+    public void setestadoSolicitud(Solicitud s) {
+        Solicitud sol;
+        try {
+            sol = domainModel.getSolicitud(s.getID());
+            sol.setEstado(s.getEstado());
+            sol.setMotivoRechazo(s.getMotivoRechazo());
+            domainModel.updateSolicitud(sol);
+        } catch (Exception ex) {
+        }
+    }
+
+    public void updateRegistrador(int id_registrador) throws Exception {
+        this.setRegistrador(domainModel.getFuncionario(id_registrador));
+        if (id_registrador == 0) {
+            registrador.setID(-1);
+        }
+    }
+
+    public void asignarRegistrador() throws Exception {
+        modelEditar.setRegistrador(registrador);
+        domainModel.updateSolicitud(modelEditar);
+    }
+
+    public List<Funcionario> getRegistradores() throws SQLException {
+        try {
+            List<Usuario> usuarios;
+            usuarios = domainModel.getUsuarios();
+            List<Funcionario> registradores = new ArrayList();
+            for (Usuario u : usuarios) {
+                if (u.getRol() == Usuario.REGISTRADOR_BIENES) {
+                    registradores.add(u.getFuncionario());
+                }
+            }
+            return registradores;
+        } catch (Exception ex) {
+            return new ArrayList();
+        }
     }
 
 }

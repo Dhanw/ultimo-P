@@ -203,6 +203,16 @@ public class Dao {
         }
 
     }
+        public List<Usuario> getUsuarios() throws SQLException, Exception {
+        String sql = "select * from Usuarios";
+        sql = String.format(sql);
+        ResultSet rs = db.executeQuery(sql);
+        List<Usuario> usuarios = new ArrayList();
+        while (rs.next()) {
+            usuarios.add(getUsuarioH(rs));
+        }
+        return usuarios;
+    }
 
 // Dependencia ------------------------------------------------------------------------------
     public Dependencia getDependencia(int id) throws SQLException, Exception {

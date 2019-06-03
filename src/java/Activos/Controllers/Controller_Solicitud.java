@@ -6,7 +6,7 @@
 package Activos.Controllers;
 
 import Activos.Logic.Bien;
-import Activos.Logic.Model;
+import Activos.Logic.Funcionario;
 import Activos.Logic.Solicitud;
 import Activos.Logic.Usuario;
 import Activos.Models.Model_Solicitud;
@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "Controller_Solicitud", urlPatterns = {"/Solicitud/Solicitud_crear",
     "/Solicitud/Solicitud_agregar_bien", "/Solicitud/Solicitud_eliminar_bien", "/Solicitud/Solicitud_guardar",
-    "/Solicitud/Solicitud_mostrar", "/Solicitud/Solicitud_editar", "/Solicitud/Solicitud_eliminar"})
+    "/Solicitud/Solicitud_mostrar", "/Solicitud/Solicitud_editar", "/Solicitud/Solicitud_eliminar", "/Solicitud/asignarRegistrador"})
 public class Controller_Solicitud extends HttpServlet {
 
     Model_Solicitud modelSolicitud = new Model_Solicitud();
@@ -61,6 +62,9 @@ public class Controller_Solicitud extends HttpServlet {
                 break;
             case "/Solicitud/Solicitud_eliminar":
                 this.eliminarSolicitud(request, response);
+                break;
+            case "/Solicitud/asignarRegistrador":
+                this.asignarRegistrador(request, response);
                 break;
         }
     }
@@ -264,24 +268,61 @@ public class Controller_Solicitud extends HttpServlet {
     private void editarSolicitud(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             int id_solicitud = Integer.parseInt(request.getParameter("ID"));
+            Solicitud solicitud = modelSolicitud.getSolicitud(id_solicitud);
+            Usuario user = (Usuario) request.getSession(true).getAttribute("user");
+            if (solicitud.getEstado() != Solicitud.RECIBIDA && user.getRol() == Usuario.ADMINISTRADOR_DEPENDENCIA) {
+                this.mostrarSolicitud(request, response);
+            }
             Solicitud model = modelSolicitud.getSolicitud(id_solicitud);
             this.modelSolicitud.setModelEditar(model);
-            request.getSession(true).setAttribute("tipoSolicitud", "editar");
-            request.getSession(true).setAttribute("bien", modelSolicitud.getBien());
             request.getSession(true).setAttribute("solicitud", modelSolicitud.getModelEditar());
-            request.getRequestDispatcher("/Solicitud/Solicitud_Editar.jsp").forward(request, response);
+            if (user.getRol() == Usuario.ADMINISTRADOR_DEPENDENCIA) {
+                request.getSession(true).setAttribute("tipoSolicitud", "editar");
+                request.getSession(true).setAttribute("bien", modelSolicitud.getBien());
+                request.getRequestDispatcher("/Solicitud/Solicitud_Editar.jsp").forward(request, response);
+            }
+            if (user.getRol() == Usuario.SECRETARIA_OCCB) {
+                if (solicitud.getEstado() != Solicitud.RECIBIDA && solicitud.getEstado() != Solicitud.POR_VERIFICAR && solicitud.getEstado() != Solicitud.RECHAZADA) {
+                    this.mostrarSolicitud(request, response);
+                }
+                request.getRequestDispatcher("/Solicitud/Solicitud_Aceptar_Rechazar.jsp").forward(request, response);
+            }
+            if (user.getRol() == Usuario.JEFE_OCCB) {
+                if (solicitud.getEstado() != Solicitud.POR_VERIFICAR) {
+                    this.mostrarSolicitud(request, response);
+                }
+
+                List<Funcionario> registradores = modelSolicitud.getRegistradores();
+                request.setAttribute("registradores", registradores);
+                request.getRequestDispatcher("/Solicitud/Solicitud_AsignarRegistrador.jsp").forward(request, response);
+            }
         } catch (Exception ex) {
         }
     }
 
     private void eliminarSolicitud(HttpServletRequest request, HttpServletResponse response) throws Exception {
         int id_solicitud = Integer.parseInt(request.getParameter("ID"));
+        Solicitud solicitud = modelSolicitud.getSolicitud(id_solicitud);
         try {
-            Model.instance().eliminarSolicitud(id_solicitud);
+            if (solicitud.getEstado() == Solicitud.RECIBIDA || solicitud.getEstado() == Solicitud.RECHAZADA) {
+                this.modelSolicitud.eliminarSolicitud(id_solicitud);
+            }
             request.setAttribute("mensaje", "correcto");
         } catch (SQLException error) {
             request.setAttribute("mensaje", error.getMessage());
         }
+        request.getRequestDispatcher("/Solicitud/Solicitud_listar").forward(request, response);
+    }
+
+    private void updateRegistrador(HttpServletRequest request) throws Exception {
+        String stringIDRegistrador = request.getParameter("registrador");
+        int id_registrador = Integer.parseInt(stringIDRegistrador);
+        modelSolicitud.updateRegistrador(id_registrador);
+    }
+
+    private void asignarRegistrador(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        this.updateRegistrador(request);
+        modelSolicitud.asignarRegistrador();
         request.getRequestDispatcher("/Solicitud/Solicitud_listar").forward(request, response);
     }
 

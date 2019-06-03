@@ -29,7 +29,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Solicitudes Edicion</title>
+        <title>Solicitudes Agregar</title>
         <%@ include file="/Head.jsp" %>
     </head>
     <body>
@@ -64,7 +64,6 @@
                 </form>
             </center>
             <br>
-            <%if (user.getRol() == Usuario.ADMINISTRADOR_DEPENDENCIA) {%>
             <center>
                 <h4>Ingresar un nuevo articulo</h4>
             </center>
@@ -87,16 +86,6 @@
                 </div>
                 <button type="submit" class="btn btn-primary"> Añadir </button>
             </form>
-            <%}%>
-            <%if (user.getRol() == Usuario.SECRETARIA_OCCB) {%>
-            <center>
-                <h4>Revicion de la Solicitud</h4>
-            </center>
-            <br>
-            <form class="form-inline" action="Solicitud/Solicitud_agregar_bien">
-
-            </form>
-            <%}%>
             <br>
             <table class="table table-hover">
                 <thead>

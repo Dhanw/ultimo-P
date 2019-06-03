@@ -16,7 +16,6 @@ import java.util.List;
  * @author jorac
  */
 public class Solicitud {
-
     //Tipos de solicitudes
     public static final int COMPRA = 1;
     public static final int DONACION = 2;
@@ -38,6 +37,7 @@ public class Solicitud {
     int cantidad;
     double total;
     List<Bien> bienes;
+    String motivoRechazo;
 
     public Solicitud() {
         this.comprobante = "";
@@ -52,9 +52,10 @@ public class Solicitud {
         this.cantidad = 0;
         this.total = 0;
         this.bienes = new ArrayList<>();
+        this.motivoRechazo = "";
     }
 
-    public Solicitud(String comprobante, Date fecha, int tipo, int estado, Funcionario registrador, Dependencia dependencia, int cantidad, double total, List<Bien> bienes) {
+    public Solicitud(String comprobante, Date fecha, int tipo, int estado, Funcionario registrador, Dependencia dependencia, int cantidad, double total, List<Bien> bienes, String motivoRechazo) {
         this.comprobante = comprobante;
         this.fecha = fecha;
         this.tipo = tipo;
@@ -70,9 +71,10 @@ public class Solicitud {
             total = total + b.getPrecio();
             this.cantidad = this.cantidad + b.getCantidad();
         }
+        this.motivoRechazo = motivoRechazo;
     }
 
-    public Solicitud(String comprobante, Date fecha, int tipo, Funcionario registrador, Dependencia dependencia, List<Bien> bienes) {
+    public Solicitud(String comprobante, Date fecha, int tipo, Funcionario registrador, Dependencia dependencia, List<Bien> bienes, String motivoRechazo) {
         this.comprobante = comprobante;
         this.fecha = fecha;
         this.tipo = tipo;
@@ -85,6 +87,7 @@ public class Solicitud {
             total = total + b.getPrecio();
             this.cantidad = this.cantidad + b.getCantidad();
         }
+        this.motivoRechazo = motivoRechazo;
     }
 
     public int getID() {
@@ -167,6 +170,14 @@ public class Solicitud {
 
     public List<Bien> getBienes() {
         return bienes;
+    }
+
+    public String getMotivoRechazo() {
+        return motivoRechazo;
+    }
+
+    public void setMotivoRechazo(String motivoRechazo) {
+        this.motivoRechazo = motivoRechazo;
     }
 
     public void setBienes(List<Bien> bienes) {

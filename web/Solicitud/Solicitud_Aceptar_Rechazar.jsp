@@ -1,10 +1,11 @@
 <%-- 
-    Document   : Solicitud_Mostrar
-    Created on : Mar 27, 2019, 4:56:28 PM
-    Author     : Jose
+    Document   : Solicitud_Agregar
+    Created on : 19/05/2019, 04:27:22 PM
+    Author     : wizard
 --%>
 
-<%@page import="Activos.Logic.Funcionario"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="Activos.Logic.Bien"%>
 <%@page import="Activos.Logic.Solicitud"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -24,7 +25,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Solicitudes Mostrar</title>
+        <title>Solicitudes Edicion</title>
         <%@ include file="/Head.jsp" %>
     </head>
     <body>
@@ -58,21 +59,7 @@
                 </form>
             </center>
             <br>
-            <%if (user.getRol() == Usuario.JEFE_OCCB || user.getRol() == Usuario.SECRETARIA_OCCB) {%>
-            <center>
-                <form class="form-inline" action="#">
-                    <div class="form-group">
-                        <label for="Registrador">Registrador:</label>
-                        <select class="form-control" id="registrador" name="registrador" disabled>
-                            <%if (solicitud.getRegistrador().getID() != 0) {%>
-                            <option selected value="<%=solicitud.getRegistrador().getID()%>"> <%=solicitud.getRegistrador().getNombre()%> </option>
-                            <%}%>
-                            <option value="0"> Sin Asignar </option>
-                        </select>
-                    </div>
-                </form> 
-            </center>
-            <%}%>
+            <br>
             <center>
                 <h4>Lista de Articulos</h4>
             </center>
@@ -88,8 +75,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <%for (Bien b
-                                : solicitud.getBienes()) {%>
+                    <%for (Bien b : solicitud.getBienes()) {%>
                     <tr>
                         <td><%=b.getDescripcion()%></td>
                         <td><%=b.getMarca()%></td>
@@ -103,22 +89,56 @@
             <form class="form-horizontal" action="#">
                 <center>
                     <div class="form-group"id="motivoRechazo">
-                        <label for="motivoRechazo"> Motivo de rechazo: </label>
-                        <textarea class="form-control" rows="3" id="motivo" value="<%=solicitud.getMotivoRechazo()%>" disabled></textarea>
+                        <label for="motivoRechazo">Motivo de rechazo :</label>
+                        <textarea class="form-control" rows="3" id="motivo" value="<%=solicitud.getMotivoRechazo()%>"></textarea>
                         <br><br>
                     </div>
                 </center>
             </form>
-            <center>
-                <a href="Solicitud/Solicitud_listar"><button class="btn btn-primary"> Regresar </button></a>
-            </center>
+            <form class="form-inline" action="#">
+                <center>
+                    <div class="form-group">
+                        <button id="aceptar" type="button" class="btn btn-success" onclick="Aceptar(<%=solicitud.getID()%>)" > Aceptar </button>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div class="form-group">
+                        <button id="rechazar" type="button" class="btn btn-danger" onclick="Rechazar()" ondblclick="Confirmar(<%=solicitud.getID()%>)"> Rechazar </button>
+                    </div>
+                </center>
+            </form>
         </div>
         <script>
             function pageLoad(event) {
+                $("#aceptar").click(Aceptar);
+                $("#rechazar").click(Rechazar);
                 HideTextArea();
-                if (tieneMotivo()) {
-                    ShowTextArea();
-                }
+            }
+            function Aceptar(id_solicitud) {
+                Solicitud = {
+                    ID: id_solicitud,
+                    motivoRechazo: $("#motivo").val()
+                };
+                $.ajax({type: "PUT",
+                    url: "api/Solicitud/aceptar",
+                    data: JSON.stringify(Solicitud),
+                    contentType: "application/json",
+                    success: Redirigir
+                });
+            }
+            function Rechazar() {
+                ShowTextArea();
+            }
+            function Confirmar(id_solicitud) {
+                Solicitud = {
+                    ID: id_solicitud,
+                    motivoRechazo: $("#motivo").val()
+                };
+                $.ajax({type: "PUT",
+                    url: "api/Solicitud/rechazar",
+                    data: JSON.stringify(Solicitud),
+                    contentType: "application/json",
+                    success: Redirigir
+                });
             }
             function ShowTextArea() {
                 $("#motivoRechazo").show();
@@ -126,10 +146,8 @@
             function HideTextArea() {
                 $("#motivoRechazo").hide();
             }
-            function tieneMotivo() {
-                var motivo = $("#motivo").val();
-                console.log(motivo);
-                return $("#motivo").val().length != 0;
+            function Redirigir() {
+                window.location.replace("Solicitud/Solicitud_listar");
             }
             $(pageLoad);
         </script>

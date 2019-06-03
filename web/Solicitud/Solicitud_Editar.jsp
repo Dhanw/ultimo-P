@@ -47,7 +47,7 @@
                     </div>
                     <div class="form-group">
                         <label for="Fecha">Fecha:</label>
-                        <input type="text" class="form-control" id="fecha" placeholder="23-05-1912" name="fecha" value="">
+                        <input type="text" class="form-control" id="fecha" placeholder="23-05-1912" name="fecha" value="<%=solicitud.getFechaString()%>">
                     </div>
                     <div class="form-group">
                         <label for="Tipo_Comprobante">Tipo:</label>
@@ -60,11 +60,10 @@
                         <label for="Estado_Comprobante">Estado:</label>
                         <input type="text" class="form-control" id="estado" placeholder="Default" name="estado" value="<%=solicitud.getDescripcionEstado()%>" disabled>
                     </div>
-                    <button type="submit" class="btn btn-success"> Guardar </button>
+                    <button type="submit" class="btn btn-success"> Actualizar </button>
                 </form>
             </center>
             <br>
-            <%if (user.getRol() == Usuario.ADMINISTRADOR_DEPENDENCIA) {%>
             <center>
                 <h4>Ingresar un nuevo articulo</h4>
             </center>
@@ -87,8 +86,6 @@
                 </div>
                 <button type="submit" class="btn btn-primary"> Añadir </button>
             </form>
-            <%}%>
-
             <br>
             <table class="table table-hover">
                 <thead>
@@ -115,6 +112,29 @@
                 </tbody>
             </table>
         </div>
+        <script>
+            function pageLoad(event) {
+                $("#aceptar").click(Aceptar);
+                $("#rechazar").click(Rechazar);
+                HideTextArea();
+            }
+            function Aceptar() {
+                HideTextArea();
+            }
+            function Rechazar() {
+                ShowTextArea();
+            }
+            function ShowTextArea() {
+                $("#motivoRechazo").show();
+            }
+            function HideTextArea() {
+                $("#motivoRechazo").hide();
+            }
+            function Selector(tipo) {
+
+            }
+            $(pageLoad);
+        </script>
     </body>
 </html>
 <%!private Map<String, String[]> getUserValues(Bien bien) {

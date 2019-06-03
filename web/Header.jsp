@@ -32,6 +32,7 @@
             <li><a href="Bienes/Bienes.jsp">Bienes</a></li>
                 <%}%>
                 <%if (user.getRol() == Usuario.JEFE_OCCB) {%>
+            <li><a href="Solicitud/Solicitud_listar"> Solicitudes </a></li>
                 <%}%>
                 <%if (user.getRol() == Usuario.REGISTRADOR_BIENES) {%>
                 <%}%>
